@@ -4,12 +4,20 @@ using System.Net;
 using System.Security.Claims;
 using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apresentation.Controllers
 {
     public class DefaultController : ControllerBase
     {
-        protected int GetCurrentIdUser_FromToken
+        private readonly ILogger<DefaultController> logger;
+
+        DefaultController(ILogger<DefaultController> logger)
+        {
+            this.logger = logger;
+        }
+
+        protected int CurrentIdUser_FromBearerToken
         {
             get
             {
@@ -18,11 +26,15 @@ namespace Apresentation.Controllers
                 {
                     int.TryParse(User.FindFirstValue("id"), out idReturn);
                 }
+                else
+                {
+                    logger.LogError("Error! The user id was not found in the token.");
+                }
                 return idReturn;
             }
         }
 
-        protected string GetCurrentNameUser_FromToken
+        protected string CurrentNameUser_FromBearerToken
         {
             get
             {
@@ -31,11 +43,46 @@ namespace Apresentation.Controllers
                 {
                     name = User.FindFirstValue("name") ?? "n/a";
                 }
+                else
+                {
+                    logger.LogError("Error! The user name was not found in the token.");
+                }
                 return name;
             }
         }
 
-        protected string GetCurrentToken_FromHeader
+        protected string CurrentEmailUser_FromBearerToken
+        {
+            get
+            {
+                string name = "n/a";
+                if (User != null && User.HasClaim(f => f.Type == "name"))
+                {
+                    name = User.FindFirstValue("name") ?? "n/a";
+                }
+                else
+                {
+                    logger.LogError("Error! The user email was not found in the token.");
+                }
+                return name;
+            }
+        }
+
+        protected string GetCurrentInforUser_FromBearerToken(string parameterName)
+        {
+            string name = "n/a";
+            if (User != null && User.HasClaim(f => f.Type == parameterName.ToLower()))
+            {
+                name = User.FindFirstValue(parameterName.ToLower()) ?? "n/a";
+            }
+            else
+            {
+                logger.LogError($"Error! The user {parameterName} was not found in the token.");
+            }
+            return name;
+        }
+
+        protected string CurrentToken_FromAuthorizationBearer
         {
             get
             {
@@ -44,11 +91,15 @@ namespace Apresentation.Controllers
                 {
                     return authHeader.Substring("Bearer ".Length).Trim();
                 }
+                else
+                {
+                    logger.LogError("Error! The token was not found in the header.");
+                }
                 return string.Empty;
             }
         }
 
-        protected string GetCurrentRole
+        protected string CurrentRole_FromBearerToken
         {
             get
             {
@@ -56,6 +107,10 @@ namespace Apresentation.Controllers
                 if (User != null && User.HasClaim(f => f.Type == ClaimTypes.Role))
                 {
                     role = string.Join(',', User.FindAll(ClaimTypes.Role).Select(s => s.Value)) ?? "n/a";
+                }
+                else
+                {
+                    logger.LogError("Error! The user role was not found in the token.");
                 }
                 return role;
             }
@@ -80,6 +135,7 @@ namespace Apresentation.Controllers
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "Error! An internal server error has occurred, please contact your system administrator.");
                 var returnAction = new DefaultResponseModel<TRetorno>();
                 returnAction.Message = "Error! An internal server error has occurred, please contact your system administrator.";
                 returnAction.Error = ex.Message;
