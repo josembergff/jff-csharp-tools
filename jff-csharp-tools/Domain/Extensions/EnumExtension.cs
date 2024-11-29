@@ -5,7 +5,7 @@ namespace JffCsharpTools.Dominio.Extensions
 {
     public static class EnumExtension
     {
-        public static string Description(this System.Enum value)
+        public static string GetDescription(this System.Enum value)
         {
             dynamic displayAttribute = null;
             var field = value.GetType().GetField(value.ToString());
