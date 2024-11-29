@@ -16,7 +16,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>jff_csharp_tools_8</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>C# Tools 8</Title>
     <Authors>Josemberg Farias Ferreira</Authors>
