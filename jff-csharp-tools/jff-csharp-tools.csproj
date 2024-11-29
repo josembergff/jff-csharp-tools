@@ -2,33 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>C# Tools</Title>
-    <Authors>Josemberg Farias Ferreira</Authors>
-    <email>josembergff@gmail.com</email>
-    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core version 8.0.11</Description>
-    <PackageProjectUrl>https://www.nuget.org/packages/jff-csharp-tools</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/josembergff/jff-csharp-tools</RepositoryUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>8.0.0.0</AssemblyVersion>
-    <FileVersion>8.0.0.0</FileVersion>
-    <Version>8.0.11</Version>
-    <PackageTags>tools;c#;custom;basic;dotnetcore</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.0.1" />
