@@ -6,7 +6,7 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools.Domain.Interface.Repository
+namespace JffCsharpTools8.Domain.Interface.Repository
 {
     public interface IDefaultRepository<T> where T : DbContext
     {

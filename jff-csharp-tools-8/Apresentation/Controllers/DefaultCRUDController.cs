@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Interface.Service;
 using JffCsharpTools.Domain.Model;
+using JffCsharpTools8.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace JffCsharpTools.Apresentation.Controllers
+namespace JffCsharpTools8.Apresentation.Controllers
 {
     public abstract class DefaultCRUDController<TService, TContext, TEntity> : DefaultController where TService : IDefaultService<TContext> where TContext : DbContext where TEntity : DefaultEntity<TEntity>, new()
     {

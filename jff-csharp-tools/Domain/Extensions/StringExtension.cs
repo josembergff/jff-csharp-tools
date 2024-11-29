@@ -18,12 +18,5 @@ namespace JffCsharpTools.Dominio.Extensions
 
             return returnGuid;
         }
-
-        static string ToSha256(this string randomString)
-        {
-            var inputBytes = Encoding.UTF8.GetBytes(randomString);
-            var inputHash = SHA256.HashData(inputBytes);
-            return Convert.ToHexString(inputHash);
-        }
     }
 }

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Interface.Repository;
-using JffCsharpTools.Domain.Interface.Service;
+using JffCsharpTools.Domain.Filter;
 using JffCsharpTools.Domain.Model;
+using JffCsharpTools8.Domain.Interface.Repository;
+using JffCsharpTools8.Domain.Interface.Service;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools.Domain.Service
+namespace JffCsharpTools8.Domain.Service
 {
     public class DefaultService<T> : IDefaultService<T> where T : DbContext
     {
@@ -69,7 +67,7 @@ namespace JffCsharpTools.Domain.Service
             var returnValue = new DefaultResponseModel<PaginationModel<TEntity>>();
             if (paginacao.Filter == null)
             {
-                paginacao.Filter = new Filter.DefaultFilter();
+                paginacao.Filter = new DefaultFilter();
             }
             paginacao.Filter.CreatorUserId = IdUser;
             var userFilterObjBase = await defaultRepository.GetPagination(paginacao, includes);

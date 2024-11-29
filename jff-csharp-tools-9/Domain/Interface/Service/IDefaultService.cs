@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Interface.Repository;
 using JffCsharpTools.Domain.Model;
+using JffCsharpTools9.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools.Domain.Interface.Service
+namespace JffCsharpTools9.Domain.Interface.Service
 {
     public interface IDefaultService<T> where T : DbContext
     {

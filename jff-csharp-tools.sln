@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools", "jff-csharp-tools\jff-csharp-tools.csproj", "{E601D133-1830-44F6-97D2-8A4129DB24FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools-8", "jff-csharp-tools-8\jff-csharp-tools-8.csproj", "{B7FCB2BF-6A0D-4972-BF7B-1B534D318339}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools-9", "jff-csharp-tools-9\jff-csharp-tools-9.csproj", "{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{E601D133-1830-44F6-97D2-8A4129DB24FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E601D133-1830-44F6-97D2-8A4129DB24FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E601D133-1830-44F6-97D2-8A4129DB24FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7FCB2BF-6A0D-4972-BF7B-1B534D318339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FCB2BF-6A0D-4972-BF7B-1B534D318339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FCB2BF-6A0D-4972-BF7B-1B534D318339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FCB2BF-6A0D-4972-BF7B-1B534D318339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
