@@ -13,6 +13,7 @@ namespace JffCsharpTools.Domain.Enums
         claimValue,
         name,
         email,
-        id
+        id,
+        idUser
     }
 }
