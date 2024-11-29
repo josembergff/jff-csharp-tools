@@ -4,22 +4,23 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace JffCsharpTools.Domain.Interface.Repository
 {
-    public interface IDefaultRepository
+    public interface IDefaultRepository<T> where T : DbContext
     {
         Task<TEntity> Create<TEntity>(TEntity entity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<IEnumerable<TEntity>> CreateInBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<TEntity> GetKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filtro, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<IEnumerable<TEntity>> Obter<TEntity>(Expression<Func<TEntity, bool>> filtro, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<IEnumerable<TEntity>> ObterUsuario<TEntity>(int idUsuario, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<PaginationModel<TEntity>> ObterPaginacao<TEntity>(PaginationModel<TEntity> paginacao, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<IEnumerable<TEntity>> GetUser<TEntity>(int idUsuario, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<PaginationModel<TEntity>> GetPagination<TEntity>(PaginationModel<TEntity> paginacao, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
         Task<bool> UpdateKey<TEntity, TKey>(TEntity entidade, TKey key) where TEntity : DefaultEntity<TEntity>, new();
-        Task AtualizarEmLote<TEntity>(IEnumerable<TEntity> listEntity, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
-        Task<bool> Remover<TEntity>(Expression<Func<TEntity, bool>> filtro, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
-        Task RemoverEmLote<TEntity>(IEnumerable<TEntity> listEntity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
+        Task UpdateInBatch<TEntity>(IEnumerable<TEntity> listEntity, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
+        Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
+        Task DeleteInBatch<TEntity>(IEnumerable<TEntity> listEntity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<bool> DeleteKey<TEntity, TKey>(TKey key) where TEntity : DefaultEntity<TEntity>, new();
     }
 }

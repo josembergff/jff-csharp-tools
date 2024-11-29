@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Interface.Repository;
 using JffCsharpTools.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace JffCsharpTools.Domain.Interface.Service
 {
-    public interface IDefaultService
+    public interface IDefaultService<T> where T : DbContext
     {
-        IDefaultRepository defaultRepository { get; set; }
+        IDefaultRepository<T> defaultRepository { get; set; }
         Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity) where TEntity : DefaultEntity<TEntity>, new();
 
         Task<DefaultResponseModel<TEntity>> GetKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new();

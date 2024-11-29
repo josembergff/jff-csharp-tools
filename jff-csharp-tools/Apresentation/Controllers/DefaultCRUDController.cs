@@ -4,11 +4,12 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Interface.Service;
 using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JffCsharpTools.Apresentation.Controllers
 {
-    public abstract class DefaultCRUDController<TService, TEntity> : DefaultController where TService : IDefaultService where TEntity : DefaultEntity<TEntity>, new()
+    public abstract class DefaultCRUDController<TService, TContext, TEntity> : DefaultController where TService : IDefaultService<TContext> where TContext : DbContext where TEntity : DefaultEntity<TEntity>, new()
     {
         private readonly TService serviceCrud;
 
