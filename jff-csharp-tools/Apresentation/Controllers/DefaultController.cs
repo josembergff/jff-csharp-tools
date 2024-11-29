@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using JffCsharpTools.Domain.Enums;
 using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,63 +22,29 @@ namespace JffCsharpTools.Apresentation.Controllers
         {
             get
             {
-                int idReturn = -1;
-                if (User != null && User.HasClaim(f => f.Type == "id"))
+                int id = 0;
+                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.id.ToString().ToLower()))
                 {
-                    int.TryParse(User.FindFirstValue("id"), out idReturn);
+                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.id.ToString().ToLower()));
                 }
                 else
                 {
                     logger.LogError("Error! The user id was not found in the token.");
                 }
-                return idReturn;
+                return id;
             }
         }
 
-        protected string CurrentNameUser_FromBearerToken
-        {
-            get
-            {
-                string name = "n/a";
-                if (User != null && User.HasClaim(f => f.Type == "name"))
-                {
-                    name = User.FindFirstValue("name") ?? "n/a";
-                }
-                else
-                {
-                    logger.LogError("Error! The user name was not found in the token.");
-                }
-                return name;
-            }
-        }
-
-        protected string CurrentEmailUser_FromBearerToken
-        {
-            get
-            {
-                string name = "n/a";
-                if (User != null && User.HasClaim(f => f.Type == "name"))
-                {
-                    name = User.FindFirstValue("name") ?? "n/a";
-                }
-                else
-                {
-                    logger.LogError("Error! The user email was not found in the token.");
-                }
-                return name;
-            }
-        }
-
-        protected string GetCurrentInforUser_FromBearerToken(string parameterName)
+        protected string GetInfor_FromBearerToken(TokenParameterEnum parameter)
         {
             string name = "n/a";
-            if (User != null && User.HasClaim(f => f.Type == parameterName.ToLower()))
+            if (User != null && User.HasClaim(f => f.Type == parameter.ToString().ToLower()))
             {
-                name = User.FindFirstValue(parameterName.ToLower()) ?? "n/a";
+                name = User.FindFirstValue(parameter.ToString().ToLower()) ?? "n/a";
             }
             else
             {
-                logger.LogError($"Error! The user {parameterName} was not found in the token.");
+                logger.LogError($"Error! The user {parameter} was not found in the token.");
             }
             return name;
         }

@@ -26,7 +26,7 @@ namespace JffCsharpTools.Apresentation.Controllers
 
         [HttpGet]
         [Route("filter")]
-        public virtual async Task<ActionResult<IEnumerable<TEntity>?>> GetFilter([FromQuery] TEntity? filter)
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> GetFilter([FromQuery] TEntity filter)
         {
             var returnObj = await serviceCrud.Get<TEntity>(CurrentIdUser_FromBearerToken, entityFilter: filter);
             return ReturnAction(returnObj);
@@ -34,14 +34,14 @@ namespace JffCsharpTools.Apresentation.Controllers
 
         [HttpGet]
         [Route("pagination")]
-        public virtual async Task<ActionResult<PaginationModel<TEntity>?>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
+        public virtual async Task<ActionResult<PaginationModel<TEntity>>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
         {
             var returnObj = await serviceCrud.GetPagination(CurrentIdUser_FromBearerToken, filter);
             return ReturnAction(returnObj);
         }
 
         [HttpGet("{key}")]
-        public async Task<ActionResult<TEntity?>> Get(int key)
+        public async Task<ActionResult<TEntity>> Get(int key)
         {
             var returnObj = await serviceCrud.GetKey<TEntity, int>(CurrentIdUser_FromBearerToken, key);
             return ReturnAction(returnObj);
