@@ -1,4 +1,4 @@
-namespace jff_csharp_tools.Domain.Constants
+namespace JffCsharpTools.Domain.Constants
 {
     public static class EventsLogConstant
     {
