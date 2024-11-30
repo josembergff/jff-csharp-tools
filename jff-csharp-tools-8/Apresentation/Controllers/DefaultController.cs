@@ -23,9 +23,9 @@ namespace JffCsharpTools8.Apresentation.Controllers
             get
             {
                 int id = 0;
-                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.id.ToString().ToLower()))
+                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString().ToLower()))
                 {
-                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.id.ToString().ToLower()));
+                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.idUser.ToString().ToLower()));
                 }
                 else
                 {
