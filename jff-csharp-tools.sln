@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools-8", "jff-c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools-9", "jff-csharp-tools-9\jff-csharp-tools-9.csproj", "{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jff-csharp-tools-6", "jff-csharp-tools-6\jff-csharp-tools-6.csproj", "{29BD41D1-6D20-49F2-8DFA-CF9B52C673BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EBC95E3-0417-4E9E-8F61-F2B637AA29DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29BD41D1-6D20-49F2-8DFA-CF9B52C673BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29BD41D1-6D20-49F2-8DFA-CF9B52C673BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29BD41D1-6D20-49F2-8DFA-CF9B52C673BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29BD41D1-6D20-49F2-8DFA-CF9B52C673BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
