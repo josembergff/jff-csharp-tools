@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace JffCsharpTools.Domain.Filter
+namespace JffCsharpTools.Domain.Filters
 {
     public static class PredicateConstructorFilter
     {

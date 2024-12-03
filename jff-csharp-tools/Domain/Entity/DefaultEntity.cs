@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
-using JffCsharpTools.Domain.Filter;
+using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Entity
 {

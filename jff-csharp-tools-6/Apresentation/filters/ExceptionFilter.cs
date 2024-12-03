@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Principal;
 
-namespace JffCsharpTools9.Apresentation.Filter
+namespace JffCsharpTools6.Apresentation.Filters
 {
     public class ExceptionFilter : ExceptionFilterAttribute
     {

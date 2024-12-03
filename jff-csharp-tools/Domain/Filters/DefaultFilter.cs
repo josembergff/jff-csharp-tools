@@ -1,6 +1,6 @@
 using System;
 
-namespace JffCsharpTools.Domain.Filter
+namespace JffCsharpTools.Domain.Filters
 {
     public class DefaultFilter
     {

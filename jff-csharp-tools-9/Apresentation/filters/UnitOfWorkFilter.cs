@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools6.Apresentation.Filter
+namespace JffCsharpTools9.Apresentation.Filters
 {
     public class UnitOfWorkFilter<T> : IActionFilter where T : DbContext
     {
