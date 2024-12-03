@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Filter;
+using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
 using JffCsharpTools9.Domain.Interface.Service;
