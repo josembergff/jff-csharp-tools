@@ -1,5 +1,6 @@
 using JffCsharpTools.Domain.Constants;
 using JffCsharpTools.Domain.Model;
+using JffCsharpTools9.Apresentation.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
@@ -28,7 +29,7 @@ namespace JffCsharpTools9.Apresentation.Filters
             returnObj.BaseException = context.Exception.GetBaseException().Message;
             returnObj.StackTrace = context.Exception.StackTrace;
 #endif
-            if (context.Exception is UnauthorizedAccessException)
+            if (context.Exception is UnauthorizedAccessException || context.Exception is TokenException)
             {
                 returnObj.Message = "Unauthorized access.";
                 returnObj.StatusCode = HttpStatusCode.Unauthorized;

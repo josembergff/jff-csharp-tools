@@ -1,9 +1,12 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using JffCsharpTools.Domain.Enums;
 using JffCsharpTools.Domain.Model;
+using JffCsharpTools8.Apresentation.Exceptions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -108,6 +111,44 @@ namespace JffCsharpTools8.Apresentation.Controllers
                 returnAction.Error = ex.Message;
                 return Problem(returnAction.Error, statusCode: (int)HttpStatusCode.InternalServerError, title: returnAction.Message);
             }
+        }
+
+        protected string GetInfor_FromAccesToken(TokenParameterEnum parameterName, bool required = false)
+        {
+            var accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            accessToken = string.IsNullOrEmpty(accessToken) ? GetToken_FromAccesToken() : accessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                if (required)
+                {
+                    throw new TokenException("Token não informado.");
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(accessToken);
+            var parameter = jwtToken.Claims.FirstOrDefault(claim => claim.Type == parameterName.ToString())?.Value ?? "";
+            return parameter;
+        }
+
+        protected string GetToken_FromAccesToken()
+        {
+            if (HttpContext.Request != null && HttpContext.Request.Headers != null)
+            {
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"];
+                if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.ToString().StartsWith("Bearer "))
+                {
+                    var accessToken = authorizationHeader.ToString().Substring("Bearer ".Length).Trim();
+                    if (!string.IsNullOrEmpty(accessToken))
+                    {
+                        return accessToken;
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }
