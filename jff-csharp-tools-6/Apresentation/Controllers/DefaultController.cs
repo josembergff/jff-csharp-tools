@@ -23,9 +23,9 @@ namespace JffCsharpTools6.Apresentation.Controllers
             get
             {
                 int id = 0;
-                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString().ToLower()))
+                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString()))
                 {
-                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.idUser.ToString().ToLower()));
+                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.idUser.ToString()));
                 }
                 else
                 {
@@ -38,9 +38,9 @@ namespace JffCsharpTools6.Apresentation.Controllers
         protected string GetInfor_FromBearerToken(TokenParameterEnum parameter)
         {
             string name = "n/a";
-            if (User != null && User.HasClaim(f => f.Type == parameter.ToString().ToLower()))
+            if (User != null && User.HasClaim(f => f.Type == parameter.ToString()))
             {
-                name = User.FindFirstValue(parameter.ToString().ToLower()) ?? "n/a";
+                name = User.FindFirstValue(parameter.ToString()) ?? "n/a";
             }
             else
             {
