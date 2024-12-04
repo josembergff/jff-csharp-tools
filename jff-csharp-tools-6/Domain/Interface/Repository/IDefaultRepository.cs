@@ -14,7 +14,7 @@ namespace JffCsharpTools6.Domain.Interface.Repository
         Task<IEnumerable<TEntity>> CreateInBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<TEntity> GetKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
         Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<IEnumerable<TEntity>> GetUser<TEntity>(int idUsuario, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
         Task<PaginationModel<TEntity>> GetPagination<TEntity>(PaginationModel<TEntity> paginacao, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
         Task<bool> UpdateKey<TEntity, TKey>(TEntity entidade, TKey key) where TEntity : DefaultEntity<TEntity>, new();

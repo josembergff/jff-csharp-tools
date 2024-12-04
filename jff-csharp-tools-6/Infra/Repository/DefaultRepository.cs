@@ -69,7 +69,7 @@ namespace JffCsharpTools6.Infra.Repository
             return entities;
         }
 
-        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
             List<TEntity> lista = new List<TEntity>();
 
@@ -79,7 +79,14 @@ namespace JffCsharpTools6.Infra.Repository
                 foreach (string lineInclue in include)
                     query = query.Include(lineInclue);
 
-            lista = await query.Where(filter).OrderByDescending(o => o.CreatedAt).ToListAsync();
+            if (asNoTracking == true)
+            {
+                lista = await query.Where(filter).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                lista = await query.Where(filter).OrderByDescending(o => o.CreatedAt).ToListAsync();
+            }
 
             return lista;
         }
