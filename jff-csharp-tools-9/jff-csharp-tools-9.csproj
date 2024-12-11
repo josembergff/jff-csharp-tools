@@ -13,7 +13,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>9.0.0.0</AssemblyVersion>
     <FileVersion>9.0.0.0</FileVersion>
-    <Version>9.0.10</Version>
+    <Version>9.0.11</Version>
     <PackageTags>tools;c#;custom;basic;dotnetcore</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jff-csharp-tools" Version="1.0.9" />
+    <PackageReference Include="jff-csharp-tools" Version="1.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
