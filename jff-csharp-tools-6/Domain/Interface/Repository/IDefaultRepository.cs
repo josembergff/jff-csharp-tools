@@ -22,5 +22,6 @@ namespace JffCsharpTools6.Domain.Interface.Repository
         Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task DeleteInBatch<TEntity>(IEnumerable<TEntity> listEntity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<bool> DeleteKey<TEntity, TKey>(TKey key) where TEntity : DefaultEntity<TEntity>, new();
+        Task SaveChangesAsync();
     }
 }

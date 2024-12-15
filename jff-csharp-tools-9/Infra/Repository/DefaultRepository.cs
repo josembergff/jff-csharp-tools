@@ -218,5 +218,10 @@ namespace JffCsharpTools9.Infra.Repository
                 dbContext.Entry(entity).State = EntityState.Detached;
             }
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await dbContext.SaveChangesAsync();
+        }
     }
 }
