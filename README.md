@@ -56,3 +56,65 @@ public class MyEntity : DefaultEntity
 ```
 
 > Namespaces may vary depending on the package version (6, 8, or 9). Adjust the namespace according to the package installed in your project.
+
+## Example 2: Using DefaultService
+
+```csharp
+using JffCsharpTools8.Domain.Service;
+using JffCsharpTools8.Domain.Repository;
+using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Filters;
+using JffCsharpTools.Domain.Model;
+using Microsoft.EntityFrameworkCore;
+
+// Suppose you have an entity:
+public class Product : DefaultEntity<Product>
+{
+    public string Name { get; set; }
+}
+
+// And a DbContext:
+public class MyDbContext : DbContext
+{
+    public DbSet<Product> Products { get; set; }
+}
+
+// Instantiating the service (dependency injection recommended):
+var repository = new DefaultRepository<MyDbContext>(/* parameters */);
+var service = new DefaultService<MyDbContext>(repository);
+
+// Creating a new product
+var newProduct = new Product { Name = "T-shirt" };
+var createResult = await service.Create<Product>(userId, newProduct);
+
+// Getting all products
+var products = await service.Get<Product>();
+
+// Getting products by user
+var userProducts = await service.GetByUser<Product>(userId);
+
+// Getting products by filter
+var filter = new DefaultFilter<Product> { /* set filters */ };
+var filteredProducts = await service.GetByFilter<Product, DefaultFilter<Product>>(filter);
+
+// Getting product by primary key
+var product = await service.GetByKey<Product, int>(userId, productId);
+
+// Paginating products
+var pagination = new PaginationModel<Product, DefaultFilter<Product>>
+{
+    Page = 1,
+    PageSize = 10,
+    Filter = new DefaultFilter<Product>()
+};
+var paginatedProducts = await service.GetPaginated<Product>(pagination, x => x.Name != null);
+
+// Updating a product
+newProduct.Name = "Updated T-shirt";
+var updateResult = await service.UpdateByKey<Product, int>(userId, newProduct, productId);
+
+// Deleting a product
+var deleteResult = await service.DeleteByKey<Product, int>(userId, productId);
+```
+
+> Adapt the examples according to the package version (6, 8 or 9) and the namespaces used in your project.
