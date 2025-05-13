@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Model
 {
-    public class PaginationModel<TEntity, TFilter> where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+    public class PaginationModel<TEntity, TFilter> where TFilter : DefaultFilter<TFilter>, new()
     {
         public PaginationModel()
         {
