@@ -5,10 +5,10 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Model;
-using JffCsharpTools9.Domain.Interface.Repository;
+using JffCsharpTools6.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools9.Infra.Repository
+namespace JffCsharpTools6.Domain.Repository
 {
     public class DefaultRepository<T> : IDefaultRepository<T> where T : DbContext
     {
@@ -78,8 +78,6 @@ namespace JffCsharpTools9.Infra.Repository
             if (include?.Any() == true)
                 foreach (string lineInclue in include)
                     query = query.Include(lineInclue);
-
-
 
             if (asNoTracking == true)
             {
