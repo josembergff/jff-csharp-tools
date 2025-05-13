@@ -6,7 +6,7 @@ using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Model
 {
-    public class PaginationModel<TEntity, TFilter> where TFilter : DefaultFilter<TEntity>, new()
+    public class PaginationModel<TEntity>
     {
         public PaginationModel()
         {
@@ -24,7 +24,6 @@ namespace JffCsharpTools.Domain.Model
         public string Order { get; set; }
         public bool OrderDescending { get; set; }
         public int Total { get; set; }
-        public TFilter Filter { get; set; }
         public IEnumerable<TEntity> List { get; set; } = Enumerable.Empty<TEntity>();
         public bool IgnorePagination = false;
         public bool Success
