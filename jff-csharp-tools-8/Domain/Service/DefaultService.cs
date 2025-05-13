@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
@@ -31,34 +32,46 @@ namespace JffCsharpTools8.Domain.Service
             return idReturn;
         }
 
-        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> Get<TEntity>(int IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> Get<TEntity>(TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
 
-            if (entityFilter != null)
+            var userFilterObjBase = await defaultRepository.Get(entityFilter.GetFilter(), includes);
+            if (userFilterObjBase != null)
             {
-                entityFilter.CreatorUserId = IdUser;
-                var userFilterObjBase = await defaultRepository.Get(entityFilter.GetFilter(), includes);
-                if (userFilterObjBase != null)
-                {
-                    returnValue.Result = userFilterObjBase.ToList();
-                }
-            }
-            else
-            {
-                var userObjBase = await defaultRepository.GetUser<TEntity>(IdUser);
-                if (userObjBase != null)
-                {
-                    returnValue.Result = userObjBase.ToList();
-                }
+                returnValue.Result = userFilterObjBase.ToList();
             }
             return returnValue;
         }
 
-        public async Task<DefaultResponseModel<TEntity>> GetKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> GetByUser<TEntity>(int IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
+
+            var userObjBase = await defaultRepository.GetByUser<TEntity>(IdUser, includes);
+            if (userObjBase != null)
+            {
+                returnValue.Result = userObjBase.ToList();
+            }
+            return returnValue;
+        }
+
+        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
+
+            var userObjBase = await defaultRepository.GetByFilter<TEntity, TFilter>(filter, includes);
+            if (userObjBase != null)
+            {
+                returnValue.Result = userObjBase.ToList();
+            }
+            return returnValue;
+        }
+
+        public async Task<DefaultResponseModel<TEntity>> GetByKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<TEntity>();
-            var userObjBase = await defaultRepository.GetKey<TEntity, Tkey>(key, includes);
+            var userObjBase = await defaultRepository.GetByKey<TEntity, Tkey>(key, includes);
             if (userObjBase != null)
             {
                 returnValue.Result = userObjBase;
@@ -66,15 +79,14 @@ namespace JffCsharpTools8.Domain.Service
             return returnValue;
         }
 
-        public async Task<DefaultResponseModel<PaginationModel<TEntity>>> GetPagination<TEntity>(int IdUser, PaginationModel<TEntity> paginacao, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, DefaultFilter<TEntity>>>> GetPaginated<TEntity>(PaginationModel<TEntity, DefaultFilter<TEntity>> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
-            var returnValue = new DefaultResponseModel<PaginationModel<TEntity>>();
-            if (paginacao.Filter == null)
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, DefaultFilter<TEntity>>>();
+            if (pagination.Filter == null)
             {
-                paginacao.Filter = new DefaultFilter();
+                pagination.Filter = new DefaultFilter<TEntity>();
             }
-            paginacao.Filter.CreatorUserId = IdUser;
-            var userFilterObjBase = await defaultRepository.GetPagination(paginacao, includes);
+            var userFilterObjBase = await defaultRepository.GetPaginated(pagination, filter, includes);
             if (userFilterObjBase != null)
             {
                 returnValue.Result = userFilterObjBase;
@@ -82,24 +94,54 @@ namespace JffCsharpTools8.Domain.Service
             return returnValue;
         }
 
-        public async Task<DefaultResponseModel<bool>> DeleteKey<TEntity, TKey>(int IdUser, TKey key) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
-            var returnValue = new DefaultResponseModel<bool>() { Result = false };
-            var userObjBase = await defaultRepository.GetKey<TEntity, TKey>(key);
-            if (userObjBase != null)
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, TFilter>>();
+            if (filter == null)
             {
-                returnValue.Result = await defaultRepository.DeleteKey<TEntity, TKey>(key);
+                filter = new TFilter();
+            }
+            var userFilterObjBase = await defaultRepository.GetPaginatedByFilter<TEntity, TFilter>(filter, includes);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Result = userFilterObjBase;
             }
             return returnValue;
         }
-        public async Task<DefaultResponseModel<bool>> Update<TEntity, TKey>(int IdUser, TEntity entity, TKey key) where TEntity : DefaultEntity<TEntity>, new()
+
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginatedByUser<TEntity, TFilter>(PaginationModel<TEntity, TFilter> paginacao, int IdUser, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, TFilter>>();
+            if (paginacao.Filter == null)
+            {
+                paginacao.Filter = new TFilter();
+            }
+            var userFilterObjBase = await defaultRepository.GetPaginatedByUser(paginacao, IdUser, includes);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Result = userFilterObjBase;
+            }
+            return returnValue;
+        }
+
+        public async Task<DefaultResponseModel<bool>> DeleteByKey<TEntity, TKey>(int IdUser, TKey key) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
-            var entityObjBase = await defaultRepository.GetKey<TEntity, TKey>(key);
+            var userObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
+            if (userObjBase != null)
+            {
+                returnValue.Result = await defaultRepository.DeleteByKey<TEntity, TKey>(key);
+            }
+            return returnValue;
+        }
+        public async Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key) where TEntity : DefaultEntity<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<bool>() { Result = false };
+            var entityObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
             entity.UpdatedAt = DateTime.Now;
             if (entityObjBase != null)
             {
-                returnValue.Result = await defaultRepository.UpdateKey(entity, key);
+                returnValue.Result = await defaultRepository.UpdateByKey(entity, key);
             }
             return returnValue;
         }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace JffCsharpTools.Dominio.Extensions
+namespace JffCsharpTools.Domain.Extensions
 {
     public static class ClassExtension
     {
