@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Linq;
 
 namespace JffCsharpTools.Domain.Extensions
@@ -30,6 +31,14 @@ namespace JffCsharpTools.Domain.Extensions
             int.TryParse(value.ToString(), out intAttribute);
 
             return intAttribute;
+        }
+
+        public static bool IsObsolete(this System.Enum value)
+        {
+            var fi = value.GetType().GetField(value.ToString());
+            var attributes = (ObsoleteAttribute[])
+                fi.GetCustomAttributes(typeof(ObsoleteAttribute), false);
+            return (attributes != null && attributes.Length > 0);
         }
     }
 }
