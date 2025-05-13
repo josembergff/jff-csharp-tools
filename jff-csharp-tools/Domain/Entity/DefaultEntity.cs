@@ -33,7 +33,7 @@ namespace JffCsharpTools.Domain.Entity
 
             foreach (Expression<Func<TEntity, bool>> predicado in filterList)
             {
-                filter = filter.And(predicado);
+                filter = PredicateConstructorFilter.And(filter, predicado);
             }
 
             return filter;

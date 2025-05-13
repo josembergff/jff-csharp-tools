@@ -1,22 +1,26 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using JffCsharpTools.Domain.Entity;
 
 namespace JffCsharpTools.Domain.Filters
 {
-    public class DefaultFilter<T1>
+    public class DefaultFilter<TEntity> where TEntity : DefaultEntity<TEntity>, new()
     {
         public int Id { get; set; }
         public int CreatorUserId { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? CreatedAtStart { get; set; }
+        public DateTime? CreatedAtEnd { get; set; }
+        public DateTime? UpdatedAtStart { get; set; }
+        public DateTime? UpdatedAtEnd { get; set; }
 
         private int _pageSize;
         private int _pageNumber;
         protected string _orderBy;
         protected bool _asc;
         public const int MAX_RESULT_SIZE = 10;
-        protected Expression<Func<T1, bool>> _where;
+        protected Expression<Func<TEntity, bool>> _where;
         public bool IgnorePagination = false;
 
         public DefaultFilter()
@@ -66,7 +70,34 @@ namespace JffCsharpTools.Domain.Filters
             set { _asc = value; }
         }
 
-        public virtual Expression<Func<T1, bool>> Where() { return c => true; }
+        public virtual Expression<Func<TEntity, bool>> Where()
+        {
+            if (_where == null)
+            {
+                List<Expression<Func<TEntity, bool>>> whereList = new List<Expression<Func<TEntity, bool>>>();
+                Expression<Func<TEntity, bool>> where = PredicateBuilderFilter.True<TEntity>();
+
+                if (Id > 0)
+                    whereList.Add(x => x.Id == Id);
+
+                if (CreatorUserId > 0)
+                    whereList.Add(x => x.CreatorUserId == CreatorUserId);
+
+                if (CreatedAtStart != null && CreatedAtStart > DateTime.MinValue && CreatedAtStart < DateTime.MaxValue)
+                    whereList.Add(x => x.CreatedAt.Date >= CreatedAtStart.Value.Date);
+
+                if (CreatedAtEnd != null && CreatedAtEnd > DateTime.MinValue && CreatedAtEnd < DateTime.MaxValue)
+                    whereList.Add(x => x.CreatedAt.Date <= CreatedAtEnd.Value.Date);
+
+                foreach (Expression<Func<TEntity, bool>> predicate in whereList)
+                {
+                    where = PredicateBuilderFilter.And(where, predicate);
+                }
+
+                _where = where;
+            }
+            return _where;
+        }
 
         public virtual void CheckPropertieNameOrderBy()
         {
