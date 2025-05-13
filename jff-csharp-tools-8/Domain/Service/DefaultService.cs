@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
@@ -31,26 +32,38 @@ namespace JffCsharpTools8.Domain.Service
             return idReturn;
         }
 
+        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> Get<TEntity>(TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
+
+            var userFilterObjBase = await defaultRepository.Get(entityFilter.GetFilter(), includes);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Result = userFilterObjBase.ToList();
+            }
+            return returnValue;
+        }
+
         public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> GetByUser<TEntity>(int IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
 
-            if (entityFilter != null)
+            var userObjBase = await defaultRepository.GetByUser<TEntity>(IdUser, includes);
+            if (userObjBase != null)
             {
-                entityFilter.CreatorUserId = IdUser;
-                var userFilterObjBase = await defaultRepository.Get(entityFilter.GetFilter(), includes);
-                if (userFilterObjBase != null)
-                {
-                    returnValue.Result = userFilterObjBase.ToList();
-                }
+                returnValue.Result = userObjBase.ToList();
             }
-            else
+            return returnValue;
+        }
+
+        public virtual async Task<DefaultResponseModel<IEnumerable<TEntity>>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<IEnumerable<TEntity>>();
+
+            var userObjBase = await defaultRepository.GetByFilter<TEntity, TFilter>(filter, includes);
+            if (userObjBase != null)
             {
-                var userObjBase = await defaultRepository.GetByUser<TEntity>(IdUser);
-                if (userObjBase != null)
-                {
-                    returnValue.Result = userObjBase.ToList();
-                }
+                returnValue.Result = userObjBase.ToList();
             }
             return returnValue;
         }
@@ -66,15 +79,44 @@ namespace JffCsharpTools8.Domain.Service
             return returnValue;
         }
 
-        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginated<TEntity, TFilter>(int IdUser, PaginationModel<TEntity, TFilter> paginacao, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, DefaultFilter<TEntity>>>> GetPaginated<TEntity>(PaginationModel<TEntity, DefaultFilter<TEntity>> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, DefaultFilter<TEntity>>>();
+            if (pagination.Filter == null)
+            {
+                pagination.Filter = new DefaultFilter<TEntity>();
+            }
+            var userFilterObjBase = await defaultRepository.GetPaginated(pagination, filter, includes);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Result = userFilterObjBase;
+            }
+            return returnValue;
+        }
+
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, TFilter>>();
+            if (filter == null)
+            {
+                filter = new TFilter();
+            }
+            var userFilterObjBase = await defaultRepository.GetPaginatedByFilter<TEntity, TFilter>(filter, includes);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Result = userFilterObjBase;
+            }
+            return returnValue;
+        }
+
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginatedByUser<TEntity, TFilter>(PaginationModel<TEntity, TFilter> paginacao, int IdUser, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<PaginationModel<TEntity, TFilter>>();
             if (paginacao.Filter == null)
             {
                 paginacao.Filter = new TFilter();
             }
-            // paginacao.Filter.CreatorUserId = IdUser;
-            var userFilterObjBase = await defaultRepository.GetPaginated(paginacao, includes);
+            var userFilterObjBase = await defaultRepository.GetPaginatedByUser(paginacao, IdUser, includes);
             if (userFilterObjBase != null)
             {
                 returnValue.Result = userFilterObjBase;

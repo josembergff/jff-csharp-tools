@@ -38,7 +38,7 @@ namespace JffCsharpTools8.Apresentation.Controllers
         [Route("pagination")]
         public virtual async Task<ActionResult<PaginationModel<TEntity, DefaultFilter<TEntity>>>> GetPagination([FromQuery] PaginationModel<TEntity, DefaultFilter<TEntity>> filter)
         {
-            var returnObj = await serviceCrud.GetPaginated(CurrentIdUser_FromBearerToken, filter);
+            var returnObj = await serviceCrud.GetPaginated(filter, f => f.CreatorUserId == CurrentIdUser_FromBearerToken);
             return ReturnAction(returnObj);
         }
 
