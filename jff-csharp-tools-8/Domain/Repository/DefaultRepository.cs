@@ -8,7 +8,7 @@ using JffCsharpTools.Domain.Model;
 using JffCsharpTools8.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools8.Infra.Repository
+namespace JffCsharpTools8.Domain.Repository
 {
     public class DefaultRepository<T> : IDefaultRepository<T> where T : DbContext
     {
