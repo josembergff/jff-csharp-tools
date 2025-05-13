@@ -2,17 +2,18 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JffCsharpTools.Domain.Extensions
 {
     public static class StringExtension
     {
-        public static Guid ToGuid(this string aString)
+        public static Guid ToGuid(this string input)
         {
             Guid newGuid;
             Guid returnGuid = default(Guid);
 
-            if (!string.IsNullOrWhiteSpace(aString) && Guid.TryParse(aString, out newGuid))
+            if (!string.IsNullOrWhiteSpace(input) && Guid.TryParse(input, out newGuid))
             {
                 returnGuid = newGuid;
             }
@@ -84,7 +85,7 @@ namespace JffCsharpTools.Domain.Extensions
 
         public static (string first, string last) GetNameFromEmail(this string email)
         {
-            var returnString = (string.Empty, string.Empty);
+            var result = (string.Empty, string.Empty);
             if (string.IsNullOrWhiteSpace(email))
             {
                 return (string.Empty, string.Empty);
@@ -97,30 +98,60 @@ namespace JffCsharpTools.Domain.Extensions
             }
             else
             {
-                returnString.Item1 = parts.First();
-                returnString.Item2 = string.Empty;
+                result.Item1 = parts.First();
+                result.Item2 = string.Empty;
             }
 
-            if (returnString.Item1.Contains("."))
+            if (result.Item1.Contains("."))
             {
-                string[] names = returnString.Item1.Split('.');
-                returnString.Item1 = names.First();
-                returnString.Item2 = names.Last();
+                string[] names = result.Item1.Split('.');
+                result.Item1 = names.First();
+                result.Item2 = names.Last();
             }
-            else if (returnString.Item1.Contains("_"))
+            else if (result.Item1.Contains("_"))
             {
-                string[] names = returnString.Item1.Split('_');
-                returnString.Item1 = names.First();
-                returnString.Item2 = names.Last();
+                string[] names = result.Item1.Split('_');
+                result.Item1 = names.First();
+                result.Item2 = names.Last();
             }
-            else if (returnString.Item1.Contains("-"))
+            else if (result.Item1.Contains("-"))
             {
-                string[] names = returnString.Item1.Split('-');
-                returnString.Item1 = names.First();
-                returnString.Item2 = names.Last();
+                string[] names = result.Item1.Split('-');
+                result.Item1 = names.First();
+                result.Item2 = names.Last();
             }
 
-            return returnString;
+            return result;
+        }
+
+        public static string OnlyNumbers(this string value) => string.IsNullOrEmpty(value) ? value : string.Concat(value.Where(c => char.IsDigit(c)));
+
+        public static string OnlyLetters(this string value) => string.IsNullOrEmpty(value) ? value : string.Concat(value.Where(c => char.IsLetter(c)));
+
+        public static int ToInt(this string value) => string.IsNullOrEmpty(value) ? 0 : int.Parse(string.Concat(value.Where(c => char.IsDigit(c))));
+
+        public static string FormatCpfCnpj(this string value)
+        {
+            var onlyNumbers = value
+                .OnlyNumbers();
+
+            if (onlyNumbers.Length == 11)
+            {
+                return Regex.Replace(
+                    onlyNumbers,
+                    @"(\d{3})(\d{3})(\d{3})(\d{2})",
+                    @"$1.$2.$3-$4");
+            }
+
+            if (onlyNumbers.Length == 14)
+            {
+                return Regex.Replace(
+                    onlyNumbers,
+                    @"(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})",
+                    @"$1.$2.$3/$4-$5");
+            }
+
+            return value;
         }
     }
 }
