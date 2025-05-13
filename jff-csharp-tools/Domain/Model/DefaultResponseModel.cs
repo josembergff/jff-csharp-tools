@@ -13,14 +13,14 @@ namespace JffCsharpTools.Domain.Model
         public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
         public List<string> MessageList { get; set; } = new List<string>();
         public T Result { get; set; }
-        public bool Sucesso
+        public bool Success
         {
             get
             {
-                var verificarStatus = StatusCode == HttpStatusCode.OK || StatusCode == HttpStatusCode.NoContent;
-                var verificarMensagem = string.IsNullOrEmpty(Message) && MessageList?.Any() != true;
-                var verificarResultado = verificarStatus && verificarMensagem;
-                return verificarResultado;
+                var checkStatus = StatusCode == HttpStatusCode.OK || StatusCode == HttpStatusCode.NoContent;
+                var checkMessage = string.IsNullOrEmpty(Message) && MessageList?.Any() != true;
+                var checkResult = checkStatus && checkMessage;
+                return checkResult;
             }
         }
     }
