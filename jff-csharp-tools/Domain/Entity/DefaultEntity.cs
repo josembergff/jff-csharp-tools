@@ -21,7 +21,7 @@ namespace JffCsharpTools.Domain.Entity
         protected Expression<Func<TEntity, bool>> GetDefaultFilter()
         {
             var filterList = new List<Expression<Func<TEntity, bool>>>();
-            Expression<Func<TEntity, bool>> filter = PredicateConstructorFilter.True<TEntity>();
+            Expression<Func<TEntity, bool>> filter = PredicateBuilderFilter.True<TEntity>();
 
             if (Id > 0)
                 filterList.Add(x => x.Id == Id);
@@ -49,7 +49,7 @@ namespace JffCsharpTools.Domain.Entity
 
             foreach (Expression<Func<TEntity, bool>> predicado in filterList)
             {
-                filter = PredicateConstructorFilter.And(filter, predicado);
+                filter = predicado.And(filter);
             }
 
             return filter;
