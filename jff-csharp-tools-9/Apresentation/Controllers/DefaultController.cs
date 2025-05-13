@@ -90,7 +90,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         {
             try
             {
-                if (returnObj != null && returnObj.Sucesso)
+                if (returnObj != null && returnObj.Success)
                 {
                     return Ok(returnObj.Result);
                 }
