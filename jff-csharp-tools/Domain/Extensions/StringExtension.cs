@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace JffCsharpTools.Dominio.Extensions
+namespace JffCsharpTools.Domain.Extensions
 {
     public static class StringExtension
     {

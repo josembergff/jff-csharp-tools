@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using CsvHelper;
 
-namespace JffCsharpTools.Dominio.Extensions
+namespace JffCsharpTools.Domain.Extensions
 {
     public static class ListExtension
     {

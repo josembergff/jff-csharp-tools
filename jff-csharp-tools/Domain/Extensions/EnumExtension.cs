@@ -1,7 +1,7 @@
 ﻿
 using System.Linq;
 
-namespace JffCsharpTools.Dominio.Extensions
+namespace JffCsharpTools.Domain.Extensions
 {
     public static class EnumExtension
     {
