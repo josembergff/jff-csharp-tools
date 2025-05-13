@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
@@ -92,6 +93,28 @@ namespace JffCsharpTools9.Domain.Repository
             return list;
         }
 
+        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            List<TEntity> list = new List<TEntity>();
+
+            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+
+            if (include?.Any() == true)
+                foreach (string includeLine in include)
+                    query = query.Include(includeLine);
+
+            if (asNoTracking == true)
+            {
+                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).ToListAsync();
+            }
+
+            return list;
+        }
+
         public async Task<TEntity> GetByKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
@@ -107,46 +130,85 @@ namespace JffCsharpTools9.Domain.Repository
             return current;
         }
 
-        public async Task<PaginationModel<TEntity, TFilter>> GetPaginated<TEntity, TFilter>(PaginationModel<TEntity, TFilter> pagination, string[] include = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationModel<TEntity, DefaultFilter<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity, DefaultFilter<TEntity>> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
-            List<TEntity> listReturn = new List<TEntity>();
+            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            if (includes != null && includes.Any())
+                foreach (string include in includes)
+                    query = query.Include(include);
+            IQueryable<TEntity> items = query.Where(filter).ApplyOrderBy(pagination.OrderDescending, pagination.Order);
 
-            if (pagination.Page > 0)
+            if (!pagination.IgnorePagination)
             {
-                var query = dbContext.Set<TEntity>().Where(f => f.Id > 0);
-
-                if (include != null && include.Any())
-                    foreach (string includeLine in include)
-                        query = query.Include(includeLine);
-
-                pagination.Total = query.Count();
-                if (pagination.CountPerPage > 0)
-                {
-                    query = query.Skip(pagination.CountPerPage * pagination.Page).Take(pagination.CountPerPage);
-                }
-
-                if (!string.IsNullOrEmpty(pagination.Order))
-                {
-                    var paramRefer = char.ToUpper(pagination.Order[0]) + pagination.Order.Substring(1);
-                    var pi = typeof(TEntity).GetProperty(paramRefer);
-
-                    if (pi != null && pagination.OrderDescending)
-                    {
-                        query = query.OrderByDescending(x => pi.GetValue(x, null));
-                    }
-                    else if (pi != null)
-                    {
-                        query = query.OrderBy(x => pi.GetValue(x, null));
-                    }
-                }
-                listReturn = await query.ToListAsync();
+                items = query.Cast<TEntity>()
+                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .Skip(pagination.SkipTotal)
+                        .Take(pagination.CountPerPage);
             }
+
+            pagination.Total = await query.CountAsync();
+            if (asNoTracking)
+                pagination.List = await items.AsNoTracking().ToListAsync();
             else
+                pagination.List = await items.ToListAsync();
+
+            return pagination;
+        }
+
+        public virtual async Task<PaginationModel<TEntity, TFilter>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            var pagedList = new PaginationModel<TEntity, TFilter>(filter);
+
+            if (includes != null && includes.Any())
+                foreach (string include in includes)
+                    query = query.Include(include);
+
+            var baseQuery = query
+                    .AsQueryable()
+                    .Where(filter.Where());
+
+            IQueryable<TEntity> items = baseQuery.ApplyOrderBy(filter.Asc, filter.OrderBy);
+
+            if (!filter.IgnorePagination)
             {
-                listReturn = await dbContext.Set<TEntity>().Where(f => f.Id > 0).OrderByDescending(o => o.CreatedAt).ToListAsync();
-                pagination.Total = listReturn.Count();
+                items = baseQuery.Cast<TEntity>()
+                        .ApplyOrderBy(filter.Asc, filter.OrderBy)
+                        .Skip(filter.SkipTotal)
+                        .Take(filter.Count);
             }
-            pagination.List = listReturn;
+
+            pagedList.Total = await baseQuery.CountAsync();
+            if (asNoTracking)
+                pagedList.List = await items.AsNoTracking().ToListAsync();
+            else
+                pagedList.List = await items.ToListAsync();
+
+            return pagedList;
+        }
+
+        public async Task<PaginationModel<TEntity, TFilter>> GetPaginatedByUser<TEntity, TFilter>(PaginationModel<TEntity, TFilter> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        {
+            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            if (includes != null && includes.Any())
+                foreach (string include in includes)
+                    query = query.Include(include);
+            IQueryable<TEntity> items = query.Where(f => f.CreatorUserId == idUser).ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+
+            if (!pagination.IgnorePagination)
+            {
+                items = query.Cast<TEntity>()
+                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .Skip(pagination.SkipTotal)
+                        .Take(pagination.CountPerPage);
+            }
+
+            pagination.Total = await query.CountAsync();
+            if (asNoTracking)
+                pagination.List = await items.AsNoTracking().ToListAsync();
+            else
+                pagination.List = await items.ToListAsync();
+
             return pagination;
         }
 
