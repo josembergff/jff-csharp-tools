@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace JffCsharpTools9.Domain.Interface.Service
 
         Task<DefaultResponseModel<IEnumerable<TEntity>>> GetByUser<TEntity>(int IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new();
 
-        Task<DefaultResponseModel<PaginationModel<TEntity>>> GetPaginated<TEntity>(int IdUser, PaginationModel<TEntity> pagination, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginated<TEntity, TFilter>(int IdUser, PaginationModel<TEntity, TFilter> paginacao, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
 
         Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key) where TEntity : DefaultEntity<TEntity>, new();
 

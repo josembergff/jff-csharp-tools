@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -106,7 +107,7 @@ namespace JffCsharpTools9.Domain.Repository
             return current;
         }
 
-        public async Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<PaginationModel<TEntity, TFilter>> GetPaginated<TEntity, TFilter>(PaginationModel<TEntity, TFilter> pagination, string[] include = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             List<TEntity> listReturn = new List<TEntity>();
 
@@ -119,9 +120,9 @@ namespace JffCsharpTools9.Domain.Repository
                         query = query.Include(includeLine);
 
                 pagination.Total = query.Count();
-                if (pagination.CountPage > 0)
+                if (pagination.CountPerPage > 0)
                 {
-                    query = query.Skip(pagination.CountPage * pagination.Page).Take(pagination.CountPage);
+                    query = query.Skip(pagination.CountPerPage * pagination.Page).Take(pagination.CountPerPage);
                 }
 
                 if (!string.IsNullOrEmpty(pagination.Order))
@@ -129,7 +130,7 @@ namespace JffCsharpTools9.Domain.Repository
                     var paramRefer = char.ToUpper(pagination.Order[0]) + pagination.Order.Substring(1);
                     var pi = typeof(TEntity).GetProperty(paramRefer);
 
-                    if (pi != null && !string.IsNullOrEmpty(pagination.TypeOrder) && pagination.TypeOrder.ToUpper() == "DESC")
+                    if (pi != null && pagination.OrderDescending)
                     {
                         query = query.OrderByDescending(x => pi.GetValue(x, null));
                     }

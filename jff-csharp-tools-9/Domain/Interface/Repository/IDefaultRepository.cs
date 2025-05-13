@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ namespace JffCsharpTools9.Domain.Interface.Repository
         Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
         Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<IEnumerable<TEntity>> GetByUser<TEntity>(int userId, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
-        Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, string[] include = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<PaginationModel<TEntity, TFilter>> GetPaginated<TEntity, TFilter>(PaginationModel<TEntity, TFilter> pagination, string[] include = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
         Task<bool> UpdateByKey<TEntity, TKey>(TEntity entity, TKey key) where TEntity : DefaultEntity<TEntity>, new();
         Task UpdateBatch<TEntity>(IEnumerable<TEntity> entityList, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();
         Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new();

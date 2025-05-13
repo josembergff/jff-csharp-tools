@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
 
         [HttpGet]
         [Route("pagination")]
-        public virtual async Task<ActionResult<PaginationModel<TEntity>>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
+        public virtual async Task<ActionResult<PaginationModel<TEntity, DefaultFilter<TEntity>>>> GetPagination([FromQuery] PaginationModel<TEntity, DefaultFilter<TEntity>> filter)
         {
             var returnObj = await serviceCrud.GetPaginated(CurrentIdUser_FromBearerToken, filter);
             return ReturnAction(returnObj);

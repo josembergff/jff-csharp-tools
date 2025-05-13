@@ -66,14 +66,14 @@ namespace JffCsharpTools6.Domain.Service
             return returnValue;
         }
 
-        public async Task<DefaultResponseModel<PaginationModel<TEntity>>> GetPaginated<TEntity>(int IdUser, PaginationModel<TEntity> paginacao, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<DefaultResponseModel<PaginationModel<TEntity, TFilter>>> GetPaginated<TEntity, TFilter>(int IdUser, PaginationModel<TEntity, TFilter> paginacao, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
-            var returnValue = new DefaultResponseModel<PaginationModel<TEntity>>();
+            var returnValue = new DefaultResponseModel<PaginationModel<TEntity, TFilter>>();
             if (paginacao.Filter == null)
             {
-                paginacao.Filter = new DefaultFilter();
+                paginacao.Filter = new TFilter();
             }
-            paginacao.Filter.CreatorUserId = IdUser;
+            // paginacao.Filter.CreatorUserId = IdUser;
             var userFilterObjBase = await defaultRepository.GetPaginated(paginacao, includes);
             if (userFilterObjBase != null)
             {
