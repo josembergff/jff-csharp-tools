@@ -23,33 +23,33 @@ namespace JffCsharpTools.Domain.Extensions
             }
         }
 
-        public static PaginationModel<T1, T3> CriarResultadoRespostaPaginado<T1, T2, T3>(this IEnumerable<T1> pagedResults, T2 paginacaoModel, bool paginacaoPendente = false) where T2 : PaginationModel<T1, T3> where T3 : DefaultFilter<T3>, new()
+        public static PaginationModel<T1, T3> CreatePaginatedResponseResult<T1, T2, T3>(this IEnumerable<T1> pagedResults, T2 paginationModel, bool pendingPagination = false) where T2 : PaginationModel<T1, T3> where T3 : DefaultFilter<T3>, new()
         {
-            if (paginacaoModel != null)
+            if (paginationModel != null)
             {
-                paginacaoModel.List = pagedResults.ToList();
-                paginacaoModel.Total = pagedResults.Count();
+                paginationModel.List = pagedResults.ToList();
+                paginationModel.Total = pagedResults.Count();
 
-                if (paginacaoPendente)
+                if (pendingPagination)
                 {
-                    if (paginacaoModel.CheckOrder(paginacaoModel.List))
+                    if (paginationModel.CheckOrder(paginationModel.List))
                     {
-                        var listaOrdenada = paginacaoModel.List.AsQueryable().ApplyOrderBy(!paginacaoModel.OrderDescending, paginacaoModel.Order);
-                        paginacaoModel.List = listaOrdenada.ToList();
+                        var orderedList = paginationModel.List.AsQueryable().ApplyOrderBy(!paginationModel.OrderDescending, paginationModel.Order);
+                        paginationModel.List = orderedList.ToList();
                     }
 
-                    var itens = paginacaoModel.List.ToList();
+                    var items = paginationModel.List.ToList();
 
-                    if (!paginacaoModel.IgnorePagination)
+                    if (!paginationModel.IgnorePagination)
                     {
-                        itens = paginacaoModel.List.Skip(paginacaoModel.SkipTotal)
-                            .Take(paginacaoModel.CountPerPage).ToList();
+                        items = paginationModel.List.Skip(paginationModel.SkipTotal)
+                            .Take(paginationModel.CountPerPage).ToList();
                     }
 
-                    paginacaoModel.List = itens;
+                    paginationModel.List = items;
                 }
             }
-            return paginacaoModel;
+            return paginationModel;
         }
     }
 }
