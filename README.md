@@ -42,9 +42,17 @@ or
 > paket add jff_csharp-tools-9
 ```
 
-## Example of use in a project .net API
+## Example of use in a .NET API project
 
-```bash
+### Example 1: Using default entities
 
+```csharp
+using Jff.CSharpTools.Domain.Entity;
 
+public class MyEntity : DefaultEntity
+{
+    public string Name { get; set; }
+}
 ```
+
+> Namespaces may vary depending on the package version (6, 8, or 9). Adjust the namespace according to the package installed in your project.
