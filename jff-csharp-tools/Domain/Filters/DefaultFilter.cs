@@ -4,14 +4,14 @@ using System.Reflection;
 
 namespace JffCsharpTools.Domain.Filters
 {
-    public class DefaultFilter<T1>
+    public class DefaultFilter<TEntity>
     {
         private int _pageSize;
         private int _pageNumber;
         protected string _orderBy;
         protected bool _asc;
         public const int MAX_RESULT_SIZE = 10;
-        protected Expression<Func<T1, bool>> _where;
+        protected Expression<Func<TEntity, bool>> _where;
         public bool IgnorePagination = false;
 
         public DefaultFilter()
@@ -61,7 +61,7 @@ namespace JffCsharpTools.Domain.Filters
             set { _asc = value; }
         }
 
-        public virtual Expression<Func<T1, bool>> Where() { return c => true; }
+        public virtual Expression<Func<TEntity, bool>> Where() { return c => true; }
 
         public virtual void CheckPropertieNameOrderBy()
         {

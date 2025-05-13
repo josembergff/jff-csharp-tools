@@ -6,7 +6,7 @@ using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Model
 {
-    public class PaginationModel<TEntity, TFilter> where TFilter : DefaultFilter<TFilter>, new()
+    public class PaginationModel<TEntity, TFilter> where TFilter : DefaultFilter<TEntity>, new()
     {
         public PaginationModel()
         {

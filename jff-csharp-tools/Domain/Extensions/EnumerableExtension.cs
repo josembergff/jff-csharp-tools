@@ -23,7 +23,7 @@ namespace JffCsharpTools.Domain.Extensions
             }
         }
 
-        public static PaginationModel<T1, T3> CreatePaginatedResponseResult<T1, T2, T3>(this IEnumerable<T1> pagedResults, T2 paginationModel, bool pendingPagination = false) where T2 : PaginationModel<T1, T3> where T3 : DefaultFilter<T3>, new()
+        public static PaginationModel<T1, T3> CreatePaginatedResponseResult<T1, T2, T3>(this IEnumerable<T1> pagedResults, T2 paginationModel, bool pendingPagination = false) where T2 : PaginationModel<T1, T3> where T3 : DefaultFilter<T1>, new()
         {
             if (paginationModel != null)
             {
