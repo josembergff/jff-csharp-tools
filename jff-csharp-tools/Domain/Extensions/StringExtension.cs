@@ -153,5 +153,24 @@ namespace JffCsharpTools.Domain.Extensions
 
             return value;
         }
+
+        public static string HideCharacters(this string value, int amount = 3, char character = '*')
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            if (value.Length <= amount)
+            {
+                return value;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(value.Substring(0, value.Length - amount));
+            sb.Append(new string(character, amount));
+
+            return sb.ToString();
+        }
     }
 }
