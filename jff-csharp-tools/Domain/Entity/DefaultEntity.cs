@@ -13,10 +13,6 @@ namespace JffCsharpTools.Domain.Entity
         public int CreatorUserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public DateTime? CreatedAtStart { get; set; }
-        public DateTime? CreatedAtEnd { get; set; }
-        public DateTime? UpdatedAtStart { get; set; }
-        public DateTime? UpdatedAtEnd { get; set; }
 
         protected Expression<Func<TEntity, bool>> GetDefaultFilter()
         {
@@ -34,18 +30,6 @@ namespace JffCsharpTools.Domain.Entity
 
             if (UpdatedAt != null && UpdatedAt > DateTime.MinValue && UpdatedAt < DateTime.MaxValue)
                 filterList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date == (UpdatedAt ?? DateTime.Now).Date);
-
-            if (CreatedAtStart != null && CreatedAtStart > DateTime.MinValue && CreatedAtStart < DateTime.MaxValue)
-                filterList.Add(x => x.CreatedAt.Date >= CreatedAtStart.Value.Date);
-
-            if (CreatedAtEnd != null && CreatedAtEnd > DateTime.MinValue && CreatedAtEnd < DateTime.MaxValue)
-                filterList.Add(x => x.CreatedAt.Date <= CreatedAtEnd.Value.Date);
-
-            if (UpdatedAtStart != null && UpdatedAtStart > DateTime.MinValue && UpdatedAtStart < DateTime.MaxValue)
-                filterList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date >= (UpdatedAtStart ?? DateTime.Now).Date);
-
-            if (UpdatedAtEnd != null && UpdatedAtEnd > DateTime.MinValue && UpdatedAtEnd < DateTime.MaxValue)
-                filterList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date <= (UpdatedAtEnd ?? DateTime.Now).Date);
 
             foreach (Expression<Func<TEntity, bool>> predicado in filterList)
             {
