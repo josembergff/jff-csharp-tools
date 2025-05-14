@@ -132,15 +132,16 @@ namespace JffCsharpTools6.Domain.Repository
 
         public virtual async Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
-            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter);
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
-            IQueryable<TEntity> items = query.Where(filter).ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+            IQueryable<TEntity> items = query.ApplyOrderBy(pagination.OrderDescending, pagination.Order);
 
             if (!pagination.IgnorePagination)
             {
                 items = query.Cast<TEntity>()
+                        .Where(filter)
                         .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
@@ -157,28 +158,24 @@ namespace JffCsharpTools6.Domain.Repository
 
         public virtual async Task<PaginationModel<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
-            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter.Where());
             var pagedList = new PaginationModel<TEntity>(filter);
 
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
 
-            var baseQuery = query
-                    .AsQueryable()
-                    .Where(filter.Where());
-
-            IQueryable<TEntity> items = baseQuery.ApplyOrderBy(filter.Asc, filter.OrderBy);
+            IQueryable<TEntity> items = query.ApplyOrderBy(filter.Asc, filter.OrderBy);
 
             if (!filter.IgnorePagination)
             {
-                items = baseQuery.Cast<TEntity>()
+                items = query.Cast<TEntity>()
                         .ApplyOrderBy(filter.Asc, filter.OrderBy)
                         .Skip(filter.SkipTotal)
                         .Take(filter.Count);
             }
 
-            pagedList.Total = await baseQuery.CountAsync();
+            pagedList.Total = await query.CountAsync();
             if (asNoTracking)
                 pagedList.List = await items.AsNoTracking().ToListAsync();
             else
@@ -189,11 +186,11 @@ namespace JffCsharpTools6.Domain.Repository
 
         public async Task<PaginationModel<TEntity>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
-            IQueryable<TEntity> query = dbContext.Set<TEntity>();
+            IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(f => f.CreatorUserId == idUser);
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
-            IQueryable<TEntity> items = query.Where(f => f.CreatorUserId == idUser).ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+            IQueryable<TEntity> items = query.ApplyOrderBy(pagination.OrderDescending, pagination.Order);
 
             if (!pagination.IgnorePagination)
             {
