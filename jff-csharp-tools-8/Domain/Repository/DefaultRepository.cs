@@ -136,17 +136,21 @@ namespace JffCsharpTools8.Domain.Repository
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
-            IQueryable<TEntity> items = query.Where(filter).ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+            var baseQuery = query
+            .AsQueryable()
+            .Where(filter);
+            IQueryable<TEntity> items = baseQuery.ApplyOrderBy(pagination.OrderDescending, pagination.Order);
 
             if (!pagination.IgnorePagination)
             {
-                items = query.Cast<TEntity>()
+                items = baseQuery.Cast<TEntity>()
+                        .Where(filter)
                         .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
             }
 
-            pagination.Total = await query.CountAsync();
+            pagination.Total = await baseQuery.CountAsync();
             if (asNoTracking)
                 pagination.List = await items.AsNoTracking().ToListAsync();
             else
