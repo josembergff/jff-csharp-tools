@@ -130,7 +130,7 @@ namespace JffCsharpTools8.Domain.Repository
             return current;
         }
 
-        public virtual async Task<PaginationModel<TEntity, DefaultFilter<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity, DefaultFilter<TEntity>> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
             if (includes != null && includes.Any())
@@ -155,10 +155,10 @@ namespace JffCsharpTools8.Domain.Repository
             return pagination;
         }
 
-        public virtual async Task<PaginationModel<TEntity, TFilter>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationModel<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
-            var pagedList = new PaginationModel<TEntity, TFilter>(filter);
+            var pagedList = new PaginationModel<TEntity>(filter);
 
             if (includes != null && includes.Any())
                 foreach (string include in includes)
@@ -187,7 +187,7 @@ namespace JffCsharpTools8.Domain.Repository
             return pagedList;
         }
 
-        public async Task<PaginationModel<TEntity, TFilter>> GetPaginatedByUser<TEntity, TFilter>(PaginationModel<TEntity, TFilter> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public async Task<PaginationModel<TEntity>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
             if (includes != null && includes.Any())
