@@ -101,7 +101,7 @@ var filteredProducts = await service.GetByFilter<Product, DefaultFilter<Product>
 var product = await service.GetByKey<Product, int>(userId, productId);
 
 // Paginating products
-var pagination = new PaginationModel<Product, DefaultFilter<Product>>
+var pagination = new PaginationModel<Product>
 {
     Page = 1,
     PageSize = 10,
