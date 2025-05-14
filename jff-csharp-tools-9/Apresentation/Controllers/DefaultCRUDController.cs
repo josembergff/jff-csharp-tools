@@ -36,7 +36,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
 
         [HttpGet]
         [Route("pagination")]
-        public virtual async Task<ActionResult<PaginationModel<TEntity, DefaultFilter<TEntity>>>> GetPagination([FromQuery] PaginationModel<TEntity, DefaultFilter<TEntity>> filter)
+        public virtual async Task<ActionResult<PaginationModel<TEntity>>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
         {
             var returnObj = await serviceCrud.GetPaginated(filter, f => f.CreatorUserId == CurrentIdUser_FromBearerToken);
             return ReturnAction(returnObj);
