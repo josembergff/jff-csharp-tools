@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools6.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +42,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         }
 
         [HttpGet("{key}")]
-        public async Task<ActionResult<TEntity>> Get(int key)
+        public virtual async Task<ActionResult<TEntity>> Get(int key)
         {
             var returnObj = await serviceCrud.GetByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key);
             return ReturnAction(returnObj);
@@ -57,14 +56,14 @@ namespace JffCsharpTools6.Apresentation.Controllers
         }
 
         [HttpPut("{key}")]
-        public async Task<ActionResult<bool>> Put(int key, [FromBody] TEntity value)
+        public virtual async Task<ActionResult<bool>> Put(int key, [FromBody] TEntity value)
         {
             var returnObj = await serviceCrud.UpdateByKey(CurrentIdUser_FromBearerToken, value, key);
             return ReturnAction(returnObj);
         }
 
         [HttpDelete("{key}")]
-        public async Task<ActionResult<bool>> Delete(int key)
+        public virtual async Task<ActionResult<bool>> Delete(int key)
         {
             var returnObj = await serviceCrud.DeleteByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key);
             return ReturnAction(returnObj);
