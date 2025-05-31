@@ -231,7 +231,7 @@ namespace JffCsharpTools9.Domain.Repository
                 foreach (string includeLine in include)
                     query = query.Include(includeLine);
 
-            list = await query.Where(f => f.Id > 0).OrderByDescending(o => o.CreatedAt).ToListAsync();
+            list = await query.Where(f => f.CreatorUserId == userId).OrderByDescending(o => o.CreatedAt).ToListAsync();
 
             return list;
         }
