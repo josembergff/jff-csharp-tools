@@ -32,7 +32,18 @@ namespace JffCsharpTools8.Apresentation.Controllers
                 }
                 else
                 {
-                    logger.LogError("Error! The user id was not found in the token.");
+                    if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.sub.ToString()))
+                    {
+                        id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.sub.ToString()));
+                    }
+                    else if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.subject.ToString()))
+                    {
+                        id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.subject.ToString()));
+                    }
+                    else
+                    {
+                        logger.LogError("Error! The user id was not found in the token.");
+                    }
                 }
                 return id;
             }

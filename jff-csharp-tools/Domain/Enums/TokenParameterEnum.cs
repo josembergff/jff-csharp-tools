@@ -14,6 +14,7 @@ namespace JffCsharpTools.Domain.Enums
         name,
         email,
         id,
-        idUser
+        idUser,
+        sub
     }
 }
