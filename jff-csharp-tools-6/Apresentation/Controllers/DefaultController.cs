@@ -7,6 +7,7 @@ using JffCsharpTools.Apresentation.Exceptions;
 using JffCsharpTools.Domain.Enums;
 using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -32,13 +33,13 @@ namespace JffCsharpTools6.Apresentation.Controllers
                 }
                 else
                 {
-                    if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.sub.ToString()))
+                    if (User != null && User.HasClaim(f => f.Type == ClaimTypes.NameIdentifier))
                     {
-                        id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.sub.ToString()));
-                    }
-                    else if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.subject.ToString()))
-                    {
-                        id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.subject.ToString()));
+                        int idUser = 0;
+                        if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out idUser))
+                        {
+                            id = idUser;
+                        }
                     }
                     else
                     {
@@ -47,6 +48,20 @@ namespace JffCsharpTools6.Apresentation.Controllers
                 }
                 return id;
             }
+        }
+
+        protected string GetInfor_FromBearerToken(string parameter)
+        {
+            string name = "n/a";
+            if (User != null && User.HasClaim(f => f.Type == parameter))
+            {
+                name = User.FindFirstValue(parameter) ?? "n/a";
+            }
+            else
+            {
+                logger.LogError($"Error! The user {parameter} was not found in the token.");
+            }
+            return name;
         }
 
         protected string GetInfor_FromBearerToken(TokenParameterEnum parameter)
