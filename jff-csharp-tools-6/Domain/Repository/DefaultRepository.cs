@@ -256,7 +256,7 @@ namespace JffCsharpTools6.Domain.Repository
             {
                 items = query.Cast<TEntity>()
                         .Where(filter)
-                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .ApplyOrderBy(pagination.OrderDescending, pagination.Order)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
             }
@@ -335,7 +335,7 @@ namespace JffCsharpTools6.Domain.Repository
             if (!pagination.IgnorePagination)
             {
                 items = query.Cast<TEntity>()
-                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .ApplyOrderBy(pagination.OrderDescending, pagination.Order)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
             }
