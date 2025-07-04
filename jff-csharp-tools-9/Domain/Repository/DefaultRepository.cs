@@ -250,13 +250,13 @@ namespace JffCsharpTools9.Domain.Repository
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
-            IQueryable<TEntity> items = query.ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+            IQueryable<TEntity> items = query.OrderByProperty(pagination.Order, pagination.OrderDescending);
 
             if (!pagination.IgnorePagination)
             {
                 items = query.Cast<TEntity>()
                         .Where(filter)
-                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .OrderByProperty(pagination.Order, pagination.OrderDescending)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
             }
@@ -292,12 +292,12 @@ namespace JffCsharpTools9.Domain.Repository
                 foreach (string include in includes)
                     query = query.Include(include);
 
-            IQueryable<TEntity> items = query.ApplyOrderBy(filter.Asc, filter.OrderBy);
+            IQueryable<TEntity> items = query.OrderByProperty(filter.OrderBy, filter.Asc);
 
             if (!filter.IgnorePagination)
             {
                 items = query.Cast<TEntity>()
-                        .ApplyOrderBy(filter.Asc, filter.OrderBy)
+                        .OrderByProperty(filter.OrderBy, filter.Asc)
                         .Skip(filter.SkipTotal)
                         .Take(filter.Count);
             }
@@ -330,12 +330,12 @@ namespace JffCsharpTools9.Domain.Repository
             if (includes != null && includes.Any())
                 foreach (string include in includes)
                     query = query.Include(include);
-            IQueryable<TEntity> items = query.ApplyOrderBy(pagination.OrderDescending, pagination.Order);
+            IQueryable<TEntity> items = query.OrderByProperty(pagination.Order, pagination.OrderDescending);
 
             if (!pagination.IgnorePagination)
             {
                 items = query.Cast<TEntity>()
-                        .ApplyOrderBy(!pagination.OrderDescending, pagination.Order)
+                        .OrderByProperty(pagination.Order, pagination.OrderDescending)
                         .Skip(pagination.SkipTotal)
                         .Take(pagination.CountPerPage);
             }
