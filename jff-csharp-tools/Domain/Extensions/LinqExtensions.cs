@@ -37,5 +37,45 @@ namespace JffCsharpTools.Domain.Extensions
             return (IOrderedQueryable<TEntity>)query.Provider.CreateQuery<TEntity>(resultExpression);
         }
 
+        public static IQueryable<T> OrderByProperty<T>(this IQueryable<T> source, string propertyName, bool descending = false)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                return source;
+
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var lambda = Expression.Lambda(property, parameter);
+
+            var methodName = descending ? "OrderByDescending" : "OrderBy";
+            var resultExpression = Expression.Call(
+                typeof(Queryable),
+                methodName,
+                new Type[] { typeof(T), property.Type },
+                source.Expression,
+                Expression.Quote(lambda));
+
+            return source.Provider.CreateQuery<T>(resultExpression);
+        }
+
+        public static IQueryable<T> ThenByProperty<T>(this IOrderedQueryable<T> source, string propertyName, bool descending = false)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                return source;
+
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var lambda = Expression.Lambda(property, parameter);
+
+            var methodName = descending ? "ThenByDescending" : "ThenBy";
+            var resultExpression = Expression.Call(
+                typeof(Queryable),
+                methodName,
+                new Type[] { typeof(T), property.Type },
+                source.Expression,
+                Expression.Quote(lambda));
+
+            return source.Provider.CreateQuery<T>(resultExpression);
+        }
+
     }
 }
