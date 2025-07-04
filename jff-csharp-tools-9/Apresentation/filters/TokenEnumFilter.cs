@@ -10,8 +10,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JffCsharpTools9.Apresentation.Filters
 {
+    /// <summary>
+    /// Action filter that performs enum-based role authorization by validating JWT tokens.
+    /// Works in conjunction with AttributeEnum to restrict access based on user roles defined in enums.
+    /// </summary>
+    /// <typeparam name="T">The enum type that represents the roles or permissions</typeparam>
     public class TokenEnumFilter<T> : IActionFilter where T : Enum
     {
+        /// <summary>
+        /// Executes before the action method runs, performing role-based authorization checks.
+        /// Validates the JWT token and ensures the user has the required roles specified by AttributeEnum.
+        /// </summary>
+        /// <param name="context">The action execution context containing request information</param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var rolesAction = new List<T>();
@@ -61,6 +71,10 @@ namespace JffCsharpTools9.Apresentation.Filters
             return;
         }
 
+        /// <summary>
+        /// Executes after the action method completes. Currently performs no operations.
+        /// </summary>
+        /// <param name="context">The action executed context containing response information</param>
         public void OnActionExecuted(ActionExecutedContext context)
         {
             // Do nothing
