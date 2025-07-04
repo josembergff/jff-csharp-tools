@@ -12,15 +12,33 @@ using Microsoft.Extensions.Logging;
 
 namespace JffCsharpTools8.Apresentation.Controllers
 {
+    /// <summary>
+    /// Base controller class that provides common functionality for authentication, token handling, and response formatting.
+    /// This controller contains utilities for extracting user information from JWT tokens and managing API responses.
+    /// All other controllers should inherit from this class to leverage the shared authentication and response handling logic.
+    /// </summary>
     public class DefaultController : ControllerBase
     {
+        /// <summary>
+        /// Logger instance for logging errors, warnings, and informational messages
+        /// </summary>
         private readonly ILogger<DefaultController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the DefaultController class.
+        /// </summary>
+        /// <param name="logger">The logger instance used for logging throughout the controller</param>
         public DefaultController(ILogger<DefaultController> logger)
         {
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Gets the current user ID from the JWT bearer token.
+        /// First attempts to extract from custom claim 'idUser', then falls back to standard NameIdentifier claim.
+        /// Returns 0 if no valid user ID is found and logs an error.
+        /// </summary>
+        /// <returns>The user ID as an integer, or 0 if not found</returns>
         protected int CurrentIdUser_FromBearerToken
         {
             get
@@ -49,6 +67,11 @@ namespace JffCsharpTools8.Apresentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Extracts a specific parameter value from the JWT bearer token using a string parameter name.
+        /// </summary>
+        /// <param name="parameter">The name of the claim/parameter to extract from the token</param>
+        /// <returns>The parameter value as a string, or "n/a" if not found</returns>
         protected string GetInfor_FromBearerToken(string parameter)
         {
             string name = "n/a";
@@ -63,6 +86,11 @@ namespace JffCsharpTools8.Apresentation.Controllers
             return name;
         }
 
+        /// <summary>
+        /// Extracts a specific parameter value from the JWT bearer token using a TokenParameterEnum.
+        /// </summary>
+        /// <param name="parameter">The enum value representing the claim/parameter to extract from the token</param>
+        /// <returns>The parameter value as a string, or "n/a" if not found</returns>
         protected string GetInfor_FromBearerToken(TokenParameterEnum parameter)
         {
             string name = "n/a";
@@ -77,6 +105,11 @@ namespace JffCsharpTools8.Apresentation.Controllers
             return name;
         }
 
+        /// <summary>
+        /// Gets the raw JWT token from the Authorization header.
+        /// Extracts the token part after "Bearer " prefix.
+        /// </summary>
+        /// <returns>The JWT token string, or empty string if not found</returns>
         protected string CurrentToken_FromAuthorizationBearer
         {
             get
@@ -94,6 +127,11 @@ namespace JffCsharpTools8.Apresentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all roles assigned to the current user from the JWT bearer token.
+        /// Combines multiple role claims into a comma-separated string.
+        /// </summary>
+        /// <returns>Comma-separated string of user roles, or "n/a" if no roles found</returns>
         protected string CurrentRole_FromBearerToken
         {
             get
@@ -111,6 +149,13 @@ namespace JffCsharpTools8.Apresentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Standardizes API response formatting based on the success status and HTTP status code.
+        /// Converts DefaultResponseModel into appropriate ActionResult with proper HTTP status codes.
+        /// </summary>
+        /// <typeparam name="TRetorno">The type of data being returned in the response</typeparam>
+        /// <param name="returnObj">The response model containing success status, data, and error information</param>
+        /// <returns>ActionResult with appropriate HTTP status code (200 OK, 400 Bad Request, or 401 Unauthorized)</returns>
         protected ActionResult<TRetorno> ReturnAction<TRetorno>(DefaultResponseModel<TRetorno> returnObj)
         {
             try
@@ -138,6 +183,14 @@ namespace JffCsharpTools8.Apresentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Extracts a specific parameter from the access token using TokenParameterEnum.
+        /// Can enforce the parameter as required, throwing an exception if not found.
+        /// </summary>
+        /// <param name="parameterName">The enum value representing the parameter to extract</param>
+        /// <param name="required">Whether the parameter is required (throws exception if true and parameter not found)</param>
+        /// <returns>The parameter value as a string, or empty string if not found and not required</returns>
+        /// <exception cref="TokenException">Thrown when required parameter is not found or token is missing</exception>
         protected string GetInfor_FromAccesToken(TokenParameterEnum parameterName, bool required = false)
         {
             var accessToken = HttpContext.GetTokenAsync("access_token").Result;
@@ -159,6 +212,11 @@ namespace JffCsharpTools8.Apresentation.Controllers
             return parameter;
         }
 
+        /// <summary>
+        /// Extracts the JWT token from the Authorization header of the current HTTP request.
+        /// Validates the header format and extracts the token part after "Bearer " prefix.
+        /// </summary>
+        /// <returns>The JWT token string, or empty string if not found or invalid format</returns>
         protected string GetToken_FromAccesToken()
         {
             if (HttpContext.Request != null && HttpContext.Request.Headers != null)
