@@ -6,6 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace JffCsharpTools.Domain.Extensions
 {
+    /// <summary>
+    /// Extension methods for string to provide additional text manipulation and validation functionality.
+    /// Includes methods for GUID conversion, CPF validation, email parsing, formatting, and text masking.
+    /// </summary>
     public static class StringExtension
     {
         /// <summary>
