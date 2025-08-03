@@ -1,5 +1,6 @@
 
 using JffCsharpTools.Domain.Enums;
+using JffCsharpTools.Domain.Extensions;
 
 namespace JffCsharpTools.Domain.Model
 {
@@ -47,6 +48,11 @@ namespace JffCsharpTools.Domain.Model
         /// Returns the enum value converted to lowercase string format.
         /// </summary>
         public string Extension { get => TypeContentFile.ToString().ToLower(); }
+        /// <summary>
+        /// Gets the content type description based on the TypeContentFile enum value.
+        /// Uses the GetDescription extension method to retrieve the description.
+        /// </summary>
+        public string ContentType { get { return TypeContentFile.GetDescription(); } }
         /// <summary>
         /// Gets or sets the description of the file.
         /// Initialized with an empty string to prevent null reference exceptions.
