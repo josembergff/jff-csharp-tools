@@ -10,6 +10,11 @@ namespace JffCsharpTools.Domain.Model
     public class FileModel
     {
         /// <summary>
+        /// Gets or sets the unique identifier for the file.
+        /// This property is used to uniquely identify the file in the system.
+        /// </summary>
+        public int Id { get; set; } = 0;
+        /// <summary>
         /// Private backing field for the TypeContentFile property.
         /// Stores the nullable enum value for file content type.
         /// </summary>
@@ -42,5 +47,10 @@ namespace JffCsharpTools.Domain.Model
         /// Returns the enum value converted to lowercase string format.
         /// </summary>
         public string Extension { get => TypeContentFile.ToString().ToLower(); }
+        /// <summary>
+        /// Gets or sets the description of the file.
+        /// Initialized with an empty string to prevent null reference exceptions.
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
     }
 }

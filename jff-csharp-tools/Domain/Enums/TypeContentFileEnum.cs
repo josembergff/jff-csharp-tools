@@ -299,7 +299,16 @@ namespace JffCsharpTools.Domain.Enums
         /// </summary>
         [Description("application/x-apple-diskimage")]
         DEB = 53,
-
+        /// <summary>
+        /// JPEG image format
+        /// </summary>
+        [Description("image/jpeg")]
+        JPG = 54,
+        /// <summary>
+        /// WebP image format
+        /// </summary>
+        [Description("image/webp")]
+        WEBP = 55,
         // Default/unknown format
         /// <summary>
         /// Unknown or unrecognized file format
