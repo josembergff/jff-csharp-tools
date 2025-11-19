@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using JffCsharpTools.Domain.Filters;
@@ -70,7 +71,7 @@ namespace JffCsharpTools.Domain.Model
         /// <summary>
         /// Flag to disable pagination and return all results
         /// </summary>
-        public bool IgnorePagination = false;
+        public bool IgnorePagination { get; set; } = false;
 
         /// <summary>
         /// Indicates whether the pagination operation was successful.
