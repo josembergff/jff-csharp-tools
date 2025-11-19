@@ -25,7 +25,7 @@ namespace JffCsharpTools.Domain.Model
         public bool OrderDescending { get; set; }
         public int Total { get; set; }
         public IEnumerable<TEntity> List { get; set; } = Enumerable.Empty<TEntity>();
-        public bool IgnorePagination = false;
+        public bool IgnorePagination { get; set; }
         public bool Success
         {
             get
