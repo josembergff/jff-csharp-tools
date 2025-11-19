@@ -12,15 +12,32 @@ using System.Security.Principal;
 
 namespace JffCsharpTools9.Apresentation.Filters
 {
+    /// <summary>
+    /// Global exception filter that handles and standardizes error responses across the application.
+    /// Converts various exception types into appropriate HTTP status codes and user-friendly messages.
+    /// </summary>
     public class ExceptionFilter : ExceptionFilterAttribute
     {
+        /// <summary>
+        /// Logger instance for recording exception details
+        /// </summary>
         private readonly ILogger<ExceptionFilter> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the ExceptionFilter
+        /// </summary>
+        /// <param name="logger">Logger instance for exception logging</param>
         public ExceptionFilter(ILogger<ExceptionFilter> logger)
         {
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Handles exceptions that occur during action execution, converting them into standardized error responses.
+        /// Different exception types are mapped to appropriate HTTP status codes and user-friendly messages.
+        /// In DEBUG mode, detailed exception information is included in the response.
+        /// </summary>
+        /// <param name="context">The exception context containing details about the exception and request</param>
         public override void OnException(ExceptionContext context)
         {
             var returnObj = new DefaultResponseModel<object>();
