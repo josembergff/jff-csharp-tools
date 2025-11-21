@@ -62,14 +62,14 @@ namespace JffCsharpTools.Domain.Filters
                 whereList.Add(x => x.CreatedAt.Date <= CreatedAtEnd.Value.Date);
 
             // Add UpdatedAt start date filter if specified and within valid range
-            // Uses DateTime.Now as fallback for null UpdatedAt values
+            // Uses DateTime.UtcNow as fallback for null UpdatedAt values
             if (UpdatedAtStart != null && UpdatedAtStart > DateTime.MinValue && UpdatedAtStart < DateTime.MaxValue)
-                whereList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date >= (UpdatedAtStart ?? DateTime.Now).Date);
+                whereList.Add(x => (x.UpdatedAt ?? DateTime.UtcNow).Date >= (UpdatedAtStart ?? DateTime.UtcNow).Date);
 
             // Add UpdatedAt end date filter if specified and within valid range
-            // Uses DateTime.Now as fallback for null UpdatedAt values
+            // Uses DateTime.UtcNow as fallback for null UpdatedAt values
             if (UpdatedAtEnd != null && UpdatedAtEnd > DateTime.MinValue && UpdatedAtEnd < DateTime.MaxValue)
-                whereList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date <= (UpdatedAtEnd ?? DateTime.Now).Date);
+                whereList.Add(x => (x.UpdatedAt ?? DateTime.UtcNow).Date <= (UpdatedAtEnd ?? DateTime.UtcNow).Date);
 
             // Start with a base expression that always returns true
             Expression<Func<DefaultEntity<TEntity>, bool>> where = PredicateBuilderFilter.True<DefaultEntity<TEntity>>();

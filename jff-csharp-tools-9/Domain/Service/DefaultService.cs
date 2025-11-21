@@ -24,7 +24,7 @@ namespace JffCsharpTools9.Domain.Service
         public virtual async Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity) where TEntity : DefaultEntity<TEntity>, new()
         {
             var idReturn = new DefaultResponseModel<int>() { Result = 0 };
-            entity.CreatedAt = DateTime.Now;
+            entity.CreatedAt = DateTime.UtcNow;
             entity.CreatorUserId = IdUser;
             var returnCreate = await defaultRepository.Create(entity);
             idReturn.Result = returnCreate.Id;
@@ -129,7 +129,7 @@ namespace JffCsharpTools9.Domain.Service
         {
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
             var entityObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
             if (entityObjBase != null)
             {
                 returnValue.Result = await defaultRepository.UpdateByKey(entity, key);

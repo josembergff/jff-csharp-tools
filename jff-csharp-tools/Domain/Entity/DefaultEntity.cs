@@ -65,7 +65,7 @@ namespace JffCsharpTools.Domain.Entity
 
             // Add UpdatedAt filter if not null and within valid date range
             if (UpdatedAt != null && UpdatedAt > DateTime.MinValue && UpdatedAt < DateTime.MaxValue)
-                filterList.Add(x => (x.UpdatedAt ?? DateTime.Now).Date == (UpdatedAt ?? DateTime.Now).Date);
+                filterList.Add(x => (x.UpdatedAt ?? DateTime.UtcNow).Date == (UpdatedAt ?? DateTime.UtcNow).Date);
 
             // Combine all filter predicates using logical AND operations
             foreach (Expression<Func<TEntity, bool>> predicado in filterList)

@@ -58,7 +58,7 @@ namespace JffCsharpTools.Domain.Extensions
         /// <returns>The next business day</returns>
         public static DateTime NextBusinessDay(this DateTime date)
         {
-            var returnDate = DateTime.Now.Date;
+            var returnDate = DateTime.UtcNow.Date;
             if (date > DateTime.MinValue)
                 returnDate = date.Date;
 
@@ -78,7 +78,7 @@ namespace JffCsharpTools.Domain.Extensions
         /// <returns>The previous business day</returns>
         public static DateTime PreviousBusinessDay(this DateTime date)
         {
-            var returnDate = DateTime.Now.Date;
+            var returnDate = DateTime.UtcNow.Date;
             if (date > DateTime.MinValue)
                 returnDate = date.Date;
 
