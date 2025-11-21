@@ -75,6 +75,13 @@ namespace JffCsharpTools9.Apresentation.Filters
                 returnObj.Message = "Identity mapping failure.";
 
             }
+            else
+            {
+                // Handle all other unhandled exceptions
+                returnObj.Message = "An unexpected error occurred.";
+                returnObj.StatusCode = HttpStatusCode.InternalServerError;
+                logger.LogError(EventsLogConstant.Generic_Exception_System, context.Exception, returnObj.Message);
+            }
         }
     }
 }

@@ -82,12 +82,12 @@ namespace JffCsharpTools6.Apresentation.Filters
                 returnObj.StatusCode = HttpStatusCode.InternalServerError;
                 logger.LogError("Identity mapping failure occurred");
             }
-            // Handle any other unexpected exceptions
             else
             {
+                // Handle all other unhandled exceptions
                 returnObj.Message = "An unexpected error occurred.";
                 returnObj.StatusCode = HttpStatusCode.InternalServerError;
-                logger.LogError(context.Exception, "Unhandled exception occurred");
+                logger.LogError(EventsLogConstant.Generic_Exception_System, context.Exception, returnObj.Message);
             }
         }
     }
