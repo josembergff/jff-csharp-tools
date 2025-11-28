@@ -98,7 +98,7 @@ namespace JffCsharpTools.Domain.Extensions
         public static DateTime LastDayOfMonth(this DateTime date)
         {
             var lastDay = DateTime.DaysInMonth(date.Year, date.Month);
-            var lastDayDate = new DateTime(date.Year, date.Month, lastDay);
+            var lastDayDate = new DateTime(date.Year, date.Month, lastDay, 0, 0, 0, DateTimeKind.Utc);
             return lastDayDate;
         }
 
@@ -111,7 +111,7 @@ namespace JffCsharpTools.Domain.Extensions
         public static DateTime LastBusinessDayOfMonth(this DateTime date)
         {
             var lastDay = DateTime.DaysInMonth(date.Year, date.Month);
-            var lastDayDate = new DateTime(date.Year, date.Month, lastDay);
+            var lastDayDate = new DateTime(date.Year, date.Month, lastDay, 0, 0, 0, DateTimeKind.Utc);
             return PreviousBusinessDay(lastDayDate);
         }
     }
