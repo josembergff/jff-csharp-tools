@@ -29,7 +29,7 @@ namespace JffCsharpTools6.Domain.Interface.Service
         /// <param name="IdUser">The ID of the user creating the entity for auditing purposes</param>
         /// <param name="entity">The entity instance to be created</param>
         /// <returns>A response model containing the ID of the created entity</returns>
-        Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Retrieves all entities with optional filtering and including related data
@@ -69,7 +69,7 @@ namespace JffCsharpTools6.Domain.Interface.Service
         /// <param name="key">The primary key value of the entity to retrieve</param>
         /// <param name="includes">Optional array of navigation property names to include in the query</param>
         /// <returns>A response model containing the requested entity or null if not found/not accessible</returns>
-        Task<DefaultResponseModel<TEntity>> GetByKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<TEntity>> GetByKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination support and custom filtering
@@ -79,7 +79,7 @@ namespace JffCsharpTools6.Domain.Interface.Service
         /// <param name="filter">Lambda expression to filter the entities</param>
         /// <param name="includes">Optional array of navigation property names to include in the query</param>
         /// <returns>A response model containing the paginated results with metadata</returns>
-        Task<DefaultResponseModel<PaginationModel<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<PaginationModel<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, int IdUser = 0) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination using a custom filter object
@@ -110,7 +110,7 @@ namespace JffCsharpTools6.Domain.Interface.Service
         /// <param name="entity">The entity instance with updated values</param>
         /// <param name="key">The primary key value of the entity to update</param>
         /// <returns>A response model containing a boolean indicating success or failure</returns>
-        Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Deletes an entity by its primary key with user validation
@@ -120,7 +120,7 @@ namespace JffCsharpTools6.Domain.Interface.Service
         /// <param name="IdUser">The user ID performing the deletion for auditing and access validation</param>
         /// <param name="key">The primary key value of the entity to delete</param>
         /// <returns>A response model containing a boolean indicating success or failure</returns>
-        Task<DefaultResponseModel<bool>> DeleteByKey<TEntity, TKey>(int IdUser, TKey key) where TEntity : DefaultEntity<TEntity>, new();
+        Task<DefaultResponseModel<bool>> DeleteByKey<TEntity, TKey>(int IdUser, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new();
     }
 
 }

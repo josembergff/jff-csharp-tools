@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Model;
@@ -26,15 +27,17 @@ namespace JffCsharpTools6.Apresentation.Controllers
         /// The service instance used for performing CRUD operations
         /// </summary>
         private readonly TService serviceCrud;
+        private readonly bool filterCurrentUser;
 
         /// <summary>
         /// Initializes a new instance of the DefaultCRUDController
         /// </summary>
         /// <param name="serviceCrud">The service instance for CRUD operations</param>
         /// <param name="logger">Logger instance for recording application events and errors</param>
-        public DefaultCRUDController(TService serviceCrud, ILogger<DefaultController> logger) : base(logger)
+        public DefaultCRUDController(TService serviceCrud, ILogger<DefaultController> logger, bool filterCurrentUser = true) : base(logger)
         {
             this.serviceCrud = serviceCrud;
+            this.filterCurrentUser = filterCurrentUser;
         }
 
         /// <summary>
@@ -44,8 +47,16 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [HttpGet]
         public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
         {
-            var returnObj = await serviceCrud.GetByUser<TEntity>(CurrentIdUser_FromBearerToken);
-            return ReturnAction(returnObj);
+            if (filterCurrentUser)
+            {
+                var returnObj = await serviceCrud.GetByUser<TEntity>(CurrentIdUser_FromBearerToken);
+                return ReturnAction(returnObj);
+            }
+            else
+            {
+                var returnObj = await serviceCrud.Get<TEntity>();
+                return ReturnAction(returnObj);
+            }
         }
 
         /// <summary>
@@ -58,8 +69,16 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [Route("filter")]
         public virtual async Task<ActionResult<IEnumerable<TEntity>>> GetFilter([FromQuery] TEntity filter)
         {
-            var returnObj = await serviceCrud.GetByUser<TEntity>(CurrentIdUser_FromBearerToken, entityFilter: filter);
-            return ReturnAction(returnObj);
+            if (filterCurrentUser)
+            {
+                var returnObj = await serviceCrud.GetByUser<TEntity>(CurrentIdUser_FromBearerToken, entityFilter: filter);
+                return ReturnAction(returnObj);
+            }
+            else
+            {
+                var returnObj = await serviceCrud.Get<TEntity>(entityFilter: filter);
+                return ReturnAction(returnObj);
+            }
         }
 
         /// <summary>
@@ -72,7 +91,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [Route("pagination")]
         public virtual async Task<ActionResult<PaginationModel<TEntity>>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
         {
-            var returnObj = await serviceCrud.GetPaginated(filter, f => f.CreatorUserId == CurrentIdUser_FromBearerToken);
+            var returnObj = await serviceCrud.GetPaginated(filter, f => true, IdUser: CurrentIdUser_FromBearerToken, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);
         }
 
@@ -85,7 +104,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [HttpGet("{key}")]
         public virtual async Task<ActionResult<TEntity>> Get(int key)
         {
-            var returnObj = await serviceCrud.GetByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key);
+            var returnObj = await serviceCrud.GetByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);
         }
 
@@ -98,7 +117,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [HttpPost]
         public virtual async Task<ActionResult<int>> Post([FromBody] TEntity value)
         {
-            var returnObj = await serviceCrud.Create(CurrentIdUser_FromBearerToken, value);
+            var returnObj = await serviceCrud.Create(CurrentIdUser_FromBearerToken, value, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);
         }
 
@@ -112,7 +131,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [HttpPut("{key}")]
         public virtual async Task<ActionResult<bool>> Put(int key, [FromBody] TEntity value)
         {
-            var returnObj = await serviceCrud.UpdateByKey(CurrentIdUser_FromBearerToken, value, key);
+            var returnObj = await serviceCrud.UpdateByKey(CurrentIdUser_FromBearerToken, value, key, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);
         }
 
@@ -125,7 +144,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         [HttpDelete("{key}")]
         public virtual async Task<ActionResult<bool>> Delete(int key)
         {
-            var returnObj = await serviceCrud.DeleteByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key);
+            var returnObj = await serviceCrud.DeleteByKey<TEntity, int>(CurrentIdUser_FromBearerToken, key, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);
         }
     }
