@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 
 namespace JffCsharpTools.Domain.Entity
@@ -18,7 +17,7 @@ namespace JffCsharpTools.Domain.Entity
         /// <summary>
         /// String representation of when the log event occurred
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
 
         /// <summary>
         /// Log level (Debug, Information, Warning, Error, Fatal, etc.)
@@ -38,12 +37,17 @@ namespace JffCsharpTools.Domain.Entity
         /// <summary>
         /// Exception details if the log entry represents an exception
         /// </summary>
-        public string? Exception { get; set; }
+        public string Exception { get; set; }
 
         /// <summary>
         /// JSON representation of structured properties associated with the log event
         /// </summary>
-        public string? Properties { get; set; }
+        public string Properties { get; set; }
+
+        /// <summary>
+        /// Timestamp indicating when the log entry was created
+        /// </summary>
+        public DateTime Ts { get; set; }
 
         /// <summary>
         /// Returns a formatted string representation of the log entry
