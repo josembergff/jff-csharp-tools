@@ -1,12 +1,8 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using JffCsharpTools.Apresentation.Exceptions;
 using JffCsharpTools.Domain.Enums;
 using JffCsharpTools.Domain.Model;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -40,27 +36,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         {
             get
             {
-                int id = 0;
-                if (User != null && User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString()))
-                {
-                    id = Convert.ToInt32(User.FindFirstValue(TokenParameterEnum.idUser.ToString()));
-                }
-                else
-                {
-                    if (User != null && User.HasClaim(f => f.Type == ClaimTypes.NameIdentifier))
-                    {
-                        int idUser = 0;
-                        if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out idUser))
-                        {
-                            id = idUser;
-                        }
-                    }
-                    else
-                    {
-                        logger.LogError("Error! The user id was not found in the token.");
-                    }
-                }
-                return id;
+                return HttpContext.CurrentUserId();
             }
         }
 
@@ -71,16 +47,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>The value of the specified claim or "n/a" if not found</returns>
         protected string GetInfor_FromBearerToken(string parameter)
         {
-            string name = "n/a";
-            if (User != null && User.HasClaim(f => f.Type == parameter))
-            {
-                name = User.FindFirstValue(parameter) ?? "n/a";
-            }
-            else
-            {
-                logger.LogError($"Error! The user {parameter} was not found in the token.");
-            }
-            return name;
+            return HttpContext.GetInforCurrentUser(parameter);
         }
 
         /// <summary>
@@ -90,16 +57,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>The value of the specified claim or "n/a" if not found</returns>
         protected string GetInfor_FromBearerToken(TokenParameterEnum parameter)
         {
-            string name = "n/a";
-            if (User != null && User.HasClaim(f => f.Type == parameter.ToString()))
-            {
-                name = User.FindFirstValue(parameter.ToString()) ?? "n/a";
-            }
-            else
-            {
-                logger.LogError($"Error! The user {parameter} was not found in the token.");
-            }
-            return name;
+            return HttpContext.GetInforCurrentUser(parameter);
         }
 
         /// <summary>
@@ -109,16 +67,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         {
             get
             {
-                var authHeader = Request.Headers["Authorization"].ToString();
-                if (authHeader != null && authHeader.StartsWith("Bearer "))
-                {
-                    return authHeader.Substring("Bearer ".Length).Trim();
-                }
-                else
-                {
-                    logger.LogError("Error! The token was not found in the header.");
-                }
-                return string.Empty;
+                return HttpContext.GetTokenCurrentUser();
             }
         }
 
@@ -129,16 +78,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         {
             get
             {
-                string role = "n/a";
-                if (User != null && User.HasClaim(f => f.Type == ClaimTypes.Role))
-                {
-                    role = string.Join(',', User.FindAll(ClaimTypes.Role).Select(s => s.Value)) ?? "n/a";
-                }
-                else
-                {
-                    logger.LogError("Error! The user role was not found in the token.");
-                }
-                return role;
+                return HttpContext.GetRolesCurrentUser();
             }
         }
 
@@ -150,28 +90,17 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>Formatted ActionResult with appropriate HTTP status code</returns>
         protected ActionResult<TRetorno> ReturnAction<TRetorno>(DefaultResponseModel<TRetorno> returnObj)
         {
-            try
+            if (returnObj != null && returnObj.Success)
             {
-                if (returnObj != null && returnObj.Success)
-                {
-                    return Ok(returnObj.Result);
-                }
-                else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    return Unauthorized(returnObj);
-                }
-                else
-                {
-                    return BadRequest(returnObj);
-                }
+                return Ok(returnObj.Result);
             }
-            catch (Exception ex)
+            else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
             {
-                logger.LogError(ex, "Error! An internal server error has occurred, please contact your system administrator.");
-                var returnAction = new DefaultResponseModel<TRetorno>();
-                returnAction.Message = "Error! An internal server error has occurred, please contact your system administrator.";
-                returnAction.Error = ex.Message;
-                return Problem(returnAction.Error, statusCode: (int)HttpStatusCode.InternalServerError, title: returnAction.Message);
+                return Unauthorized(returnObj);
+            }
+            else
+            {
+                return BadRequest(returnObj);
             }
         }
 
@@ -184,23 +113,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <exception cref="TokenException">Thrown when required parameter is not found and required=true</exception>
         protected string GetInfor_FromAccesToken(TokenParameterEnum parameterName, bool required = false)
         {
-            var accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            accessToken = string.IsNullOrEmpty(accessToken) ? GetToken_FromAccesToken() : accessToken;
-            if (string.IsNullOrEmpty(accessToken))
-            {
-                if (required)
-                {
-                    throw new TokenException("Token não informado.");
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(accessToken);
-            var parameter = jwtToken.Claims.FirstOrDefault(claim => claim.Type == parameterName.ToString())?.Value ?? "";
-            return parameter;
+            return HttpContext.GetInforFromToken(parameterName, required);
         }
 
         /// <summary>
@@ -209,19 +122,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>The JWT token string without the "Bearer " prefix, or empty string if not found</returns>
         protected string GetToken_FromAccesToken()
         {
-            if (HttpContext.Request != null && HttpContext.Request.Headers != null)
-            {
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"];
-                if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.ToString().StartsWith("Bearer "))
-                {
-                    var accessToken = authorizationHeader.ToString().Substring("Bearer ".Length).Trim();
-                    if (!string.IsNullOrEmpty(accessToken))
-                    {
-                        return accessToken;
-                    }
-                }
-            }
-            return string.Empty;
+            return HttpContext.GetTokenCurrentUser();
         }
     }
 }
