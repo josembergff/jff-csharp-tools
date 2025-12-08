@@ -15,21 +15,19 @@ public static class CrudEndpoints
         where TContext : DbContext
         where TEntity : DefaultEntity<TEntity>, new()
     {
-        group.MapGet(route, async () => (await service.Get<TEntity>()).ReturnResult());
+        group.MapGet(route, async (HttpContext ctx) => filterCurrentUser ? (await service.GetByUser<TEntity>(ctx.CurrentUserId())).ReturnResult() : (await service.Get<TEntity>()).ReturnResult());
+
         group.MapGet($"{route}/{{id}}", async (HttpContext ctx, int id) =>
-            (await service.GetByKey<TEntity, int>(ctx.CurrentUserId(), id)).ReturnResult());
+            (await service.GetByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: filterCurrentUser)).ReturnResult());
 
         group.MapPost(route, async (HttpContext ctx, TEntity req) =>
-            Results.Created(route, await service.Create(ctx.CurrentUserId(), req)));
+             (await service.Create(ctx.CurrentUserId(), req, filterCurrentUser: filterCurrentUser)).ReturnResult());
 
         group.MapPut($"{route}/{{id}}", async (HttpContext ctx, int id, TEntity req) =>
-            Results.Ok(await service.UpdateByKey(ctx.CurrentUserId(), req, id, filterCurrentUser)));
+            (await service.UpdateByKey(ctx.CurrentUserId(), req, id, filterCurrentUser: filterCurrentUser)).ReturnResult());
 
         group.MapDelete($"{route}/{{id}}", async (HttpContext ctx, int id) =>
-        {
-            await service.DeleteByKey<TEntity, int>(ctx.CurrentUserId(), id);
-            return Results.NoContent();
-        });
+            (await service.DeleteByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: filterCurrentUser)).ReturnResult());
 
         return group;
     }
