@@ -89,7 +89,7 @@ namespace JffCsharpTools.Domain.Extensions
                 {
                     if (paginationModel.CheckOrder(paginationModel.List))
                     {
-                        var orderedList = paginationModel.List.AsQueryable().ApplyOrderBy(!paginationModel.OrderDescending, paginationModel.Order);
+                        var orderedList = paginationModel.List.AsQueryable().OrderByProperty(paginationModel.Order!, paginationModel.OrderDescending);
                         paginationModel.List = orderedList.ToList();
                     }
 
