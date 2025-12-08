@@ -12,42 +12,36 @@ namespace JffCsharpTools.Domain.Entity
         /// <summary>
         /// Unique identifier for the log entry
         /// </summary>
-        public long Id { get; set; }
-
+        public int Id { get; set; }
         /// <summary>
-        /// String representation of when the log event occurred
+        /// The message template used in the log entry
         /// </summary>
-        public string Timestamp { get; set; }
-
+        public string Message { get; set; }
         /// <summary>
-        /// Log level (Debug, Information, Warning, Error, Fatal, etc.)
+        /// The rendered message after applying the template
         /// </summary>
-        public string Level { get; set; } = string.Empty;
-
+        public string MessageTemplate { get; set; }
         /// <summary>
-        /// Message template used for structured logging
+        /// The log level (e.g., Information, Error)
         /// </summary>
-        public string Template { get; set; } = string.Empty;
-
+        public string Level { get; set; }
         /// <summary>
-        /// Rendered log message with parameters replaced
+        /// The timestamp of when the log entry was created
         /// </summary>
-        public string Message { get; set; } = string.Empty;
-
+        public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Exception details if the log entry represents an exception
+        /// The exception message or stack trace if an exception occurred
         /// </summary>
         public string Exception { get; set; }
-
         /// <summary>
-        /// JSON representation of structured properties associated with the log event
+        /// The structured properties associated with the log entry
+        /// JSONB => pode ser string ou Dictionary<string, object>
         /// </summary>
         public string Properties { get; set; }
-
         /// <summary>
-        /// Timestamp indicating when the log entry was created
+        /// The log event identifier
         /// </summary>
-        public DateTime Ts { get; set; }
+        public string LogEvent { get; set; }
 
         /// <summary>
         /// Returns a formatted string representation of the log entry
