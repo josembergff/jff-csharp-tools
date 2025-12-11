@@ -40,6 +40,14 @@ namespace JffCsharpTools9.Apresentation.Controllers
             }
         }
 
+        protected Guid CurrentGuidUser_FromBearerToken
+        {
+            get
+            {
+                return HttpContext.CurrentGuidUserId();
+            }
+        }
+
         /// <summary>
         /// Extracts specific information from the Bearer token using a custom parameter name
         /// </summary>
