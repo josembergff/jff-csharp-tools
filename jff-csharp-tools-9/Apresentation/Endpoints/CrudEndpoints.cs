@@ -11,23 +11,27 @@ public static class CrudEndpoints
         this RouteGroupBuilder group,
         string route,
         IDefaultService<TContext> service,
-        bool filterCurrentUser = true)
+        CrudOptions crudOptions = default)
         where TContext : DbContext
         where TEntity : DefaultEntity<TEntity>, new()
     {
-        group.MapGet(route, async (HttpContext ctx) => filterCurrentUser ? (await service.GetByUser<TEntity>(ctx.CurrentUserId())).ReturnResult() : (await service.Get<TEntity>()).ReturnResult());
+        if (!crudOptions.ExcludeGetAll)
+            group.MapGet(route, async (HttpContext ctx) => crudOptions.IgnoreCurrentUser ? (await service.GetByUser<TEntity>(ctx.CurrentUserId())).ReturnResult() : (await service.Get<TEntity>()).ReturnResult());
 
-        group.MapGet($"{route}/{{id}}", async (HttpContext ctx, int id) =>
-            (await service.GetByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: filterCurrentUser)).ReturnResult());
+        if (!crudOptions.ExcludeGetById)
+            group.MapGet($"{route}/{{id}}", async (HttpContext ctx, int id) =>
+            (await service.GetByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: crudOptions.IgnoreCurrentUser)).ReturnResult());
+        if (!crudOptions.ExcludeCreate)
+            group.MapPost(route, async (HttpContext ctx, TEntity req) =>
+             (await service.Create(ctx.CurrentUserId(), req, filterCurrentUser: crudOptions.IgnoreCurrentUser)).ReturnResult());
 
-        group.MapPost(route, async (HttpContext ctx, TEntity req) =>
-             (await service.Create(ctx.CurrentUserId(), req, filterCurrentUser: filterCurrentUser)).ReturnResult());
+        if (!crudOptions.ExcludeUpdate)
+            group.MapPut($"{route}/{{id}}", async (HttpContext ctx, int id, TEntity req) =>
+            (await service.UpdateByKey(ctx.CurrentUserId(), req, id, filterCurrentUser: crudOptions.IgnoreCurrentUser)).ReturnResult());
 
-        group.MapPut($"{route}/{{id}}", async (HttpContext ctx, int id, TEntity req) =>
-            (await service.UpdateByKey(ctx.CurrentUserId(), req, id, filterCurrentUser: filterCurrentUser)).ReturnResult());
-
-        group.MapDelete($"{route}/{{id}}", async (HttpContext ctx, int id) =>
-            (await service.DeleteByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: filterCurrentUser)).ReturnResult());
+        if (!crudOptions.ExcludeDelete)
+            group.MapDelete($"{route}/{{id}}", async (HttpContext ctx, int id) =>
+            (await service.DeleteByKey<TEntity, int>(ctx.CurrentUserId(), id, filterCurrentUser: crudOptions.IgnoreCurrentUser)).ReturnResult());
 
         return group;
     }
