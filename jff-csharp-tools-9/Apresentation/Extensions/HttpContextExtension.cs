@@ -14,18 +14,33 @@ public static class HttpContextExtensions
         int id = 0;
         if (context.User != null && context.User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString()))
         {
-            id = Convert.ToInt32(context.User.FindFirstValue(TokenParameterEnum.idUser.ToString()));
+            id = int.TryParse(context.User.FindFirstValue(TokenParameterEnum.idUser.ToString()), out id) ? id : 0;
+        }
+        else if (context.User != null && context.User.HasClaim(f => f.Type == ClaimTypes.NameIdentifier))
+        {
+            id = int.TryParse(context.User.FindFirstValue(ClaimTypes.NameIdentifier), out id) ? id : 0;
         }
         else
         {
-            if (context.User != null && context.User.HasClaim(f => f.Type == ClaimTypes.NameIdentifier))
-            {
-                int idUser = 0;
-                if (int.TryParse(context.User.FindFirstValue(ClaimTypes.NameIdentifier), out idUser))
-                {
-                    id = idUser;
-                }
-            }
+            id = int.TryParse(context.User.FindFirstValue(TokenParameterEnum.sub.ToString()), out id) ? id : 0;
+        }
+        return id;
+    }
+
+    public static Guid CurrentGuidUserId(this HttpContext context)
+    {
+        Guid id = Guid.Empty;
+        if (context.User != null && context.User.HasClaim(f => f.Type == TokenParameterEnum.idUser.ToString()))
+        {
+            id = Guid.TryParse(context.User.FindFirstValue(TokenParameterEnum.idUser.ToString()), out id) ? id : Guid.Empty;
+        }
+        else if (context.User != null && context.User.HasClaim(f => f.Type == ClaimTypes.NameIdentifier))
+        {
+            id = Guid.TryParse(context.User.FindFirstValue(ClaimTypes.NameIdentifier), out id) ? id : Guid.Empty;
+        }
+        else
+        {
+            id = Guid.TryParse(context.User.FindFirstValue(TokenParameterEnum.sub.ToString()), out id) ? id : Guid.Empty;
         }
         return id;
     }
