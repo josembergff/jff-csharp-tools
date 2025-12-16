@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace JffCsharpTools.Domain.Extensions
 {
@@ -113,6 +114,32 @@ namespace JffCsharpTools.Domain.Extensions
             var lastDay = DateTime.DaysInMonth(date.Year, date.Month);
             var lastDayDate = new DateTime(date.Year, date.Month, lastDay, 0, 0, 0, DateTimeKind.Utc);
             return PreviousBusinessDay(lastDayDate);
+        }
+
+        public static T ConvertDatesToUtc<T>(this T entity)
+        {
+            var properties = typeof(T).GetProperties().Where(p => p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?));
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(entity);
+                if (value != null)
+                {
+                    if (property.PropertyType == typeof(DateTime))
+                    {
+                        var dateTimeValue = (DateTime)value;
+                        property.SetValue(entity, DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc));
+                    }
+                    else if (property.PropertyType == typeof(DateTime?))
+                    {
+                        var dateTimeValue = (DateTime?)value;
+                        if (dateTimeValue.HasValue)
+                        {
+                            property.SetValue(entity, DateTime.SpecifyKind(dateTimeValue.Value, DateTimeKind.Utc));
+                        }
+                    }
+                }
+            }
+            return entity;
         }
     }
 }

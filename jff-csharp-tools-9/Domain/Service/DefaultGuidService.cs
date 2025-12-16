@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
@@ -24,6 +25,7 @@ namespace JffCsharpTools9.Domain.Service
 
         public virtual async Task<DefaultResponseModel<int>> Create<TEntity>(Guid IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
+            entity = entity.ConvertDatesToUtc();
             var idReturn = new DefaultResponseModel<int>() { Result = 0 };
             entity.CreatedAt = DateTime.UtcNow;
             entity.CreatorUserId = !filterCurrentUser && entity.CreatorUserId != Guid.Empty ? entity.CreatorUserId : IdUser;
@@ -165,6 +167,7 @@ namespace JffCsharpTools9.Domain.Service
         }
         public virtual async Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(Guid IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
+            entity = entity.ConvertDatesToUtc();
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
             var entityObjBase = await defaultGuidRepository.GetByKey<TEntity, TKey>(key);
             entity.UpdatedAt = DateTime.UtcNow;
