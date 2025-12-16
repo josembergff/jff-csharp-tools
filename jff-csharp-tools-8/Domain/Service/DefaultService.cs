@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools8.Domain.Interface.Repository;
@@ -25,6 +26,7 @@ namespace JffCsharpTools8.Domain.Service
         public virtual async Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var idReturn = new DefaultResponseModel<int>() { Result = 0 };
+            entity = entity.ConvertDatesToUtc();
             entity.CreatedAt = DateTime.UtcNow;
             entity.CreatorUserId = !filterCurrentUser && entity.CreatorUserId > 0 ? entity.CreatorUserId : IdUser;
             var returnCreate = await defaultRepository.Create(entity);
@@ -167,6 +169,7 @@ namespace JffCsharpTools8.Domain.Service
         {
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
             var entityObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
+            entity = entity.ConvertDatesToUtc();
             entity.UpdatedAt = DateTime.UtcNow;
             if (entityObjBase != null)
             {

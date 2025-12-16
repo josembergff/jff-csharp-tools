@@ -167,8 +167,8 @@ namespace JffCsharpTools9.Domain.Service
         }
         public virtual async Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(Guid IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
-            entity = entity.ConvertDatesToUtc();
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
+            entity = entity.ConvertDatesToUtc();
             var entityObjBase = await defaultGuidRepository.GetByKey<TEntity, TKey>(key);
             entity.UpdatedAt = DateTime.UtcNow;
             if (entityObjBase != null)

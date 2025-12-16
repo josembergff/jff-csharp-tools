@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
+using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Model;
 using JffCsharpTools9.Domain.Interface.Repository;
@@ -25,6 +26,7 @@ namespace JffCsharpTools9.Domain.Service
         public virtual async Task<DefaultResponseModel<int>> Create<TEntity>(int IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var idReturn = new DefaultResponseModel<int>() { Result = 0 };
+            entity = entity.ConvertDatesToUtc();
             entity.CreatedAt = DateTime.UtcNow;
             entity.CreatorUserId = !filterCurrentUser && entity.CreatorUserId > 0 ? entity.CreatorUserId : IdUser;
             var returnCreate = await defaultRepository.Create(entity);
@@ -166,6 +168,7 @@ namespace JffCsharpTools9.Domain.Service
         public virtual async Task<DefaultResponseModel<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new DefaultResponseModel<bool>() { Result = false };
+            entity = entity.ConvertDatesToUtc();
             var entityObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
             entity.UpdatedAt = DateTime.UtcNow;
             if (entityObjBase != null)
