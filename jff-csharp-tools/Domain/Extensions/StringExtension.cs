@@ -222,5 +222,37 @@ namespace JffCsharpTools.Domain.Extensions
 
             return sb.ToString();
         }
+
+        public static bool IsCnpjAlfanumericoValido(string cnpj)
+        {
+            if (string.IsNullOrWhiteSpace(cnpj))
+                return false;
+
+            // Remove máscara
+            var clean = new string(cnpj.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
+
+            if (clean.Length != 14)
+                return false;
+
+            int[] pesos1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] pesos2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+
+            int Valor(char c) => char.IsDigit(c) ? c - '0' : c - 48;
+
+            int CalcularDv(ReadOnlySpan<char> baseCnpj, int[] pesos)
+            {
+                var soma = 0;
+                for (int i = 0; i < pesos.Length; i++)
+                    soma += Valor(baseCnpj[i]) * pesos[i];
+
+                var resto = soma % 11;
+                return resto < 2 ? 0 : 11 - resto;
+            }
+
+            var dv1 = CalcularDv(clean.AsSpan(0, 12), pesos1);
+            var dv2 = CalcularDv(clean.AsSpan(0, 13), pesos2);
+
+            return clean[12] - '0' == dv1 && clean[13] - '0' == dv2;
+        }
     }
 }
