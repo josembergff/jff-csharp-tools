@@ -223,7 +223,7 @@ namespace JffCsharpTools.Domain.Extensions
             return sb.ToString();
         }
 
-        public static bool IsCnpjAlfanumericoValido(string cnpj)
+        public static bool IsValidAlphanumericCnpj(string cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj))
                 return false;
