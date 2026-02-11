@@ -93,7 +93,7 @@ public static class HttpContextExtensions
         {
             if (required)
             {
-                throw new TokenException("Token não informado.");
+                throw new TokenException("Token not found.");
             }
             else
             {
@@ -103,6 +103,27 @@ public static class HttpContextExtensions
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(accessToken);
         var parameter = jwtToken.Claims.FirstOrDefault(claim => claim.Type == parameterName.ToString())?.Value ?? "";
+        return parameter;
+    }
+
+    public static string GetInforFromToken(this HttpContext context, string parameterName, bool required = false)
+    {
+        var accessToken = context.GetTokenAsync("access_token").Result;
+        accessToken = string.IsNullOrEmpty(accessToken) ? GetTokenCurrentUser(context) : accessToken;
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            if (required)
+            {
+                throw new TokenException("Token not found.");
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(accessToken);
+        var parameter = jwtToken.Claims.FirstOrDefault(claim => claim.Type == parameterName)?.Value ?? "";
         return parameter;
     }
 }

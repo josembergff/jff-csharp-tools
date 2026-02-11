@@ -199,7 +199,7 @@ namespace JffCsharpTools8.Apresentation.Controllers
             {
                 if (required)
                 {
-                    throw new TokenException("Token não informado.");
+                    throw new TokenException("Token not found.");
                 }
                 else
                 {

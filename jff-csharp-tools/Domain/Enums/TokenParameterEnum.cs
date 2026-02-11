@@ -75,6 +75,75 @@ namespace JffCsharpTools.Domain.Enums
         /// <summary>
         /// JWT subject claim identifier (alternative to 'subject')
         /// </summary>
-        sub
+        sub,
+
+        /// <summary>
+        /// User role claim identifier
+        /// </summary>
+        role,
+
+        /// <summary>
+        /// User nickname claim identifier
+        /// </summary>
+        nickname,
+
+        /// <summary>
+        /// User age claim identifier
+        /// </summary>
+        age,
+
+        /// <summary>
+        /// JWT expiration time claim identifier
+        /// </summary>
+        exp,
+
+        /// <summary>
+        /// JWT issued at claim identifier
+        /// </summary>
+        iat,
+
+        /// <summary>
+        /// User email verification status claim identifier
+        /// </summary>
+        email_verified,
+
+        /// <summary>
+        /// User phone number claim identifier
+        /// </summary>
+        phone_number,
+
+        /// <summary>
+        /// User phone number verification status claim identifier
+        /// </summary>
+        phone_number_verified,
+
+        /// <summary>
+        /// JWT issuer claim identifier
+        /// </summary>
+        iss,
+
+        /// <summary>
+        /// JWT scope claim identifier
+        /// </summary>
+        scope,
+
+        /// <summary>
+        /// JWT ID claim identifier
+        /// </summary>
+        jti,
+
+        /// <summary>
+        /// JWT unique name claim identifier
+        /// </summary>
+        unique_name,
+
+        /// <summary>
+        /// JWT client ID claim identifier
+        /// </summary>
+        client_id,
+        /// <summary>
+        /// JWT remember login required in client claim identifier
+        /// </summary>
+        rl
     }
 }
