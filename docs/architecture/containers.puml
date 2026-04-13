@@ -24,9 +24,9 @@ System_Ext(aspnet, "ASP.NET Core", "HTTP pipeline (controllers, filters, middlew
 System_Ext(jwtBearer, "JWT Bearer Authentication", "Token validation for DefaultController and TokenEnumFilter.")
 System_Ext(relDb, "Relational Database\n(any EF Core provider)", "SQL Server, PostgreSQL, MySQL, etc. Used by consumer apps through EF Core DbContext.")
 
-Rel(developer, lib6, "Installs via NuGet", "jff_csharp-tools-6")
-Rel(developer, lib8, "Installs via NuGet", "jff_csharp-tools-8")
-Rel(developer, lib9, "Installs via NuGet", "jff_csharp-tools-9")
+Rel(developer, lib6, "Installs via NuGet", "jff-csharp-tools-6")
+Rel(developer, lib8, "Installs via NuGet", "jff-csharp-tools-8")
+Rel(developer, lib9, "Installs via NuGet", "jff-csharp-tools-9")
 
 Rel(lib6, coreLib, "References")
 Rel(lib8, coreLib, "References")
