@@ -1,0 +1,56 @@
+@startuml C4 Containers - jff-csharp-tools
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Container Diagram — jff-csharp-tools
+
+Person(developer, "Developer", "Consumes the NuGet packages in their .NET application.")
+
+System_Boundary(jffTools, "jff-csharp-tools") {
+
+    Container(coreLib, "jff-csharp-tools\n(netstandard2.1)", "C# / .NET Standard 2.1", "Core shared library. Provides base entities, domain models, filters, LINQ/string/date/enum extensions, and CSV helpers. No runtime framework dependency.")
+
+    Container(lib6, "jff-csharp-tools-6\n(.NET 6)", "C# / .NET 6", "Version targeting .NET 6. Adds repository (DefaultRepository), service (DefaultService), interfaces (IDefaultRepository, IDefaultService), presentation controllers, filters, and extensions on top of the core library.")
+
+    Container(lib8, "jff-csharp-tools-8\n(.NET 8)", "C# / .NET 8", "Version targeting .NET 8. Includes all features from the .NET 6 variant plus updated dependencies (EF Core 8, JWT Bearer 8, ASP.NET Core 8).")
+
+    Container(lib9, "jff-csharp-tools-9\n(.NET 9)", "C# / .NET 9", "Most feature-rich version. Adds Minimal API endpoint helpers (CrudEndpoints, CrudGuidEndpoints), GUID-based service/repository/controller variants, and updated dependencies for .NET 9.")
+}
+
+System_Ext(nuget, "NuGet.org", "Hosts published packages for distribution.")
+System_Ext(efCore, "Entity Framework Core", "ORM for database access (consumed by repository implementations).")
+System_Ext(aspnet, "ASP.NET Core", "HTTP pipeline (controllers, filters, middleware).")
+System_Ext(jwtBearer, "JWT Bearer Authentication", "Token validation for DefaultController and TokenEnumFilter.")
+System_Ext(relDb, "Relational Database\n(any EF Core provider)", "SQL Server, PostgreSQL, MySQL, etc. Used by consumer apps through EF Core DbContext.")
+
+Rel(developer, lib6, "Installs via NuGet", "jff-csharp-tools-6")
+Rel(developer, lib8, "Installs via NuGet", "jff-csharp-tools-8")
+Rel(developer, lib9, "Installs via NuGet", "jff-csharp-tools-9")
+
+Rel(lib6, coreLib, "References")
+Rel(lib8, coreLib, "References")
+Rel(lib9, coreLib, "References")
+
+Rel(lib6, efCore, "Uses")
+Rel(lib8, efCore, "Uses")
+Rel(lib9, efCore, "Uses")
+
+Rel(lib6, aspnet, "Uses")
+Rel(lib8, aspnet, "Uses")
+Rel(lib9, aspnet, "Uses")
+
+Rel(lib6, jwtBearer, "Uses")
+Rel(lib8, jwtBearer, "Uses")
+Rel(lib9, jwtBearer, "Uses")
+
+Rel(lib6, relDb, "Accesses via EF Core DbContext")
+Rel(lib8, relDb, "Accesses via EF Core DbContext")
+Rel(lib9, relDb, "Accesses via EF Core DbContext")
+
+Rel(lib6, nuget, "Published to")
+Rel(lib8, nuget, "Published to")
+Rel(lib9, nuget, "Published to")
+Rel(coreLib, nuget, "Published to")
+
+@enduml
