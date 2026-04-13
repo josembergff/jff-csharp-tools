@@ -1,0 +1,102 @@
+@startuml C4 Components - jff-csharp-tools
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram — jff-csharp-tools (all packages)
+
+'--------------------------------------------------
+' Core library (jff-csharp-tools / netstandard2.1)
+'--------------------------------------------------
+Container_Boundary(core, "jff-csharp-tools (Core)") {
+
+    Component(defaultEntity, "DefaultEntity<TEntity>", "C# abstract class", "Base entity with int Id, int CreatorUserId, CreatedAt, UpdatedAt and GetFilter() using PredicateBuilderFilter.")
+    Component(defaultGuidEntity, "DefaultGuidEntity<TEntity>", "C# abstract class", "Base entity variant using Guid as CreatorUserId.")
+    Component(logSerilogEntity, "LogSerilogEntity", "C# class", "Entity that maps structured Serilog log entries to a database table.")
+
+    Component(defaultResponseModel, "DefaultResponseModel<T>", "C# class", "Generic API response wrapper with Result, StatusCode, Error, Message, and Success flag.")
+    Component(paginationModel, "PaginationModel<TEntity>", "C# class", "Pagination parameters (Page, CountPerPage, Order) plus paginated results (List, Total, TotalPages).")
+    Component(fileModel, "FileModel", "C# class", "Represents a file with name, content, and content-type.")
+    Component(chartModel, "ChartModel / SerieChartModel", "C# classes", "Models for chart data series rendering.")
+    Component(crudOptionsModel, "CrudOptionsModel / CrudOptions", "C# class/struct", "Options to toggle individual CRUD operations on endpoints.")
+    Component(typeModel, "TypeModel", "C# class", "Generic key-value pair model for dropdown/type lists.")
+
+    Component(defaultFilter, "DefaultFilter<TEntity>", "C# class", "Base filter with Page, Count, OrderBy, Asc, SkipTotal and virtual Where() expression.")
+    Component(defaultEntityFilter, "DefaultEntityFilter", "C# class", "Filter helper for entity-level property filtering.")
+    Component(predicateBuilder, "PredicateBuilderFilter", "C# static class", "LINQ expression predicate builder with True/False/And/Or combinators.")
+
+    Component(stringExt, "StringExtension", "C# static class", "String helpers: IsNullOrEmpty, ToLower, truncate, mask, etc.")
+    Component(dateTimeExt, "DateTimeExtension", "C# static class", "DateTime helpers: ToUnixTimestamp, age calculation, Brazilian time zone helpers.")
+    Component(enumExt, "EnumExtension", "C# static class", "Enum helpers: GetDescription, GetAll, ToList.")
+    Component(enumerableExt, "EnumerableExtension", "C# static class", "IEnumerable helpers: ToCsv, ToDataTable, chunking.")
+    Component(linqExt, "LinqExtensions", "C# static class", "IQueryable helpers: OrderBy string name, WhereIf.")
+    Component(classExt, "ClassExtension", "C# static class", "Object helpers: DeepClone, ToJson, FromJson.")
+
+    Component(eventsLogConst, "EventsLogConstant", "C# static class", "Structured log event IDs for Unauthorized, DB, SMTP, File, and Generic exceptions.")
+
+    Component(tokenEnum, "TokenParameterEnum", "C# enum", "Enum for token parameter types (Header, Query, Cookie).")
+    Component(typeContentEnum, "TypeContentFileEnum", "C# enum", "Enum for file MIME content types.")
+    Component(brazilStates, "BrazilStatesEnum", "C# enum", "Brazilian state abbreviation enum.")
+
+    Component(tokenException, "TokenException", "C# exception", "Custom exception thrown when a token validation failure occurs.")
+}
+
+'--------------------------------------------------
+' Versioned packages (6, 8, 9)
+'--------------------------------------------------
+Container_Boundary(versioned, "jff-csharp-tools-6 / -8 / -9 (versioned packages)") {
+
+    Component(iDefaultRepo, "IDefaultRepository<T>", "C# interface", "Repository contract: Add, Update, Delete, Get, GetByKey, GetPaginated, SaveChanges.")
+    Component(iDefaultService, "IDefaultService<T>", "C# interface", "Service contract: Create, Get, GetByUser, GetByFilter, GetByKey, GetPaginated, UpdateByKey, DeleteByKey.")
+    Component(iDefaultGuidRepo, "IDefaultGuidRepository<T>", "C# interface", "Repository contract variant for Guid-based entities (v9 only).")
+    Component(iDefaultGuidService, "IDefaultGuidService<T>", "C# interface", "Service contract variant for Guid-based entities (v9 only).")
+
+    Component(defaultRepo, "DefaultRepository<T>", "C# class", "EF Core implementation of IDefaultRepository. Performs Add/Update/Delete/Query against a DbContext.")
+    Component(defaultService, "DefaultService<T>", "C# class", "Business logic layer on top of IDefaultRepository. Handles user filtering, pagination, and error wrapping in DefaultResponseModel.")
+    Component(defaultGuidRepo, "DefaultGuidRepository<T>", "C# class", "EF Core repository variant for Guid-keyed entities (v9 only).")
+    Component(defaultGuidService, "DefaultGuidService<T>", "C# class", "Service variant for Guid-keyed entities (v9 only).")
+
+    Component(defaultController, "DefaultController", "ASP.NET Core Controller", "Base controller. Extracts CurrentIdUser_FromBearerToken from JWT claims and provides ReturnAction helper.")
+    Component(defaultCrudController, "DefaultCRUDController<TService,TContext,TEntity>", "ASP.NET Core Controller", "Abstract CRUD controller with GET, GET/{key}, GET/filter, GET/pagination, POST, PUT/{key}, DELETE/{key} endpoints.")
+    Component(defaultGuidCrudController, "DefaultGuidCRUDController", "ASP.NET Core Controller", "CRUD controller variant for Guid-based entities (v9 only).")
+
+    Component(crudEndpoints, "CrudEndpoints", "C# static class / Minimal API", "MapCrud<TEntity,TContext>() extension method that registers GET/POST/PUT/DELETE Minimal API routes (v9 only).")
+    Component(crudGuidEndpoints, "CrudGuidEndpoints", "C# static class / Minimal API", "Minimal API endpoint helper for Guid-based entities (v9 only).")
+
+    Component(exceptionFilter, "ExceptionFilter", "ASP.NET Core Filter", "Global exception filter mapping UnauthorizedException, DbException, SmtpException, FileNotFoundException to HTTP status codes.")
+    Component(tokenEnumFilter, "TokenEnumFilter", "ASP.NET Core Filter", "Action filter that validates tokens passed via header, query string, or cookie based on TokenParameterEnum.")
+    Component(unitOfWorkFilter, "UnitOfWorkFilter", "ASP.NET Core Filter", "Action filter that calls SaveChanges after successful action execution to commit the EF Core unit of work.")
+
+    Component(enumConverter, "EnumConverter", "System.Text.Json Converter", "Custom JSON converter to serialize/deserialize enums as strings.")
+    Component(httpContextExt, "HttpContextExtension", "C# static class", "HttpContext helpers: CurrentUserId(), GetBearerToken().")
+    Component(defaultResponseExt, "DefaultResponseModelExtension", "C# static class", "Extension: ReturnResult() converts DefaultResponseModel<T> to IResult for Minimal API responses.")
+    Component(attributeEnum, "AttributeEnum", "C# Attribute", "Custom attribute for annotating enum members with metadata.")
+}
+
+'--- Relationships ---
+Rel(defaultCrudController, defaultController, "Inherits")
+Rel(defaultGuidCrudController, defaultController, "Inherits")
+Rel(defaultCrudController, iDefaultService, "Uses")
+Rel(defaultGuidCrudController, iDefaultGuidService, "Uses")
+
+Rel(defaultService, iDefaultRepo, "Uses")
+Rel(defaultGuidService, iDefaultGuidRepo, "Uses")
+
+Rel(defaultRepo, defaultEntity, "Manages entities inheriting from")
+Rel(defaultGuidRepo, defaultGuidEntity, "Manages entities inheriting from")
+
+Rel(defaultService, defaultResponseModel, "Returns")
+Rel(defaultService, paginationModel, "Returns")
+Rel(defaultService, defaultFilter, "Accepts")
+
+Rel(defaultEntity, predicateBuilder, "Uses in GetFilter()")
+Rel(defaultFilter, predicateBuilder, "Uses")
+
+Rel(exceptionFilter, eventsLogConst, "Logs using")
+Rel(exceptionFilter, tokenException, "Catches")
+Rel(crudEndpoints, iDefaultService, "Uses")
+Rel(crudGuidEndpoints, iDefaultGuidService, "Uses")
+Rel(crudEndpoints, httpContextExt, "Uses")
+Rel(crudEndpoints, defaultResponseExt, "Uses")
+
+@enduml

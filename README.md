@@ -1,5 +1,11 @@
-# C# Tools
-C# Tools for .NET Core version 6.0.36, 8.0.11 or 9 is an open-source project offering a suite of utilities to enhance C# development for .NET Core. It includes libraries for common tasks, code snippets, and performance optimizations, helping developers improve productivity, code quality, and simplify complex tasks.
+# jff-csharp-tools
+
+**jff-csharp-tools** is an open-source NuGet library suite for **.NET Core** (versions 6, 8 and 9) that provides reusable
+utilities to accelerate C# API development. It ships opinionated base classes and helpers for the most common
+boilerplate patterns: base entities with audit fields, generic repository/service layers, ready-made CRUD controllers
+and Minimal API endpoints, global exception handling, JWT authentication helpers, and a rich set of domain extensions.
+
+📖 **Documentation:** [`/docs`](./docs)
 
 ## Install Package Manager
 
@@ -118,3 +124,92 @@ var deleteResult = await service.DeleteByKey<Product, int>(userId, productId);
 ```
 
 > Adapt the examples according to the package version (6, 8 or 9) and the namespaces used in your project.
+
+---
+
+## Technology Stack
+
+| Component              | Technology                              |
+|------------------------|-----------------------------------------|
+| Language               | C# (.NET Standard 2.1 / .NET 6, 8, 9)  |
+| ORM                    | Entity Framework Core (6 / 8 / 9)      |
+| HTTP framework         | ASP.NET Core MVC + Minimal APIs         |
+| Authentication         | ASP.NET Core JWT Bearer                 |
+| Logging entity         | Serilog (LogSerilogEntity)              |
+| CSV support            | CsvHelper                               |
+| Package registry       | NuGet.org                               |
+
+---
+
+## Principal Modules
+
+| Module / Package                  | Description                                                                             |
+|-----------------------------------|-----------------------------------------------------------------------------------------|
+| `jff-csharp-tools` (core)         | Shared entities, models, filters, and extension helpers (netstandard2.1)                |
+| `Domain/Entity`                   | `DefaultEntity<T>`, `DefaultGuidEntity<T>`, `LogSerilogEntity`                         |
+| `Domain/Model`                    | `DefaultResponseModel<T>`, `PaginationModel<T>`, `FileModel`, `ChartModel`, `TypeModel` |
+| `Domain/Filters`                  | `DefaultFilter<T>`, `DefaultEntityFilter`, `PredicateBuilderFilter`                     |
+| `Domain/Extensions`               | `StringExtension`, `DateTimeExtension`, `EnumExtension`, `LinqExtensions`, `ClassExtension`, `EnumerableExtension` |
+| `jff-csharp-tools-6/8/9`          | Versioned packages with repository, service, controllers, and filters                   |
+| `Domain/Repository`               | `DefaultRepository<T>`, `DefaultGuidRepository<T>` (EF Core)                          |
+| `Domain/Service`                  | `DefaultService<T>`, `DefaultGuidService<T>`                                           |
+| `Apresentation/Controllers`       | `DefaultController`, `DefaultCRUDController<TService,TContext,TEntity>`                |
+| `Apresentation/Endpoints` (v9)    | `CrudEndpoints`, `CrudGuidEndpoints` (Minimal API helpers)                             |
+| `Apresentation/Filters`           | `ExceptionFilter`, `TokenEnumFilter`, `UnitOfWorkFilter`                               |
+| `Apresentation/Extensions`        | `HttpContextExtension`, `DefaultResponseModelExtension`                                |
+
+---
+
+## How to Build Locally
+
+### Prerequisites
+
+- [.NET SDK 9](https://dotnet.microsoft.com/download) (also supports .NET 6 and 8)
+- Git
+
+### Clone and restore
+
+```bash
+git clone https://github.com/josembergff/jff-csharp-tools.git
+cd jff-csharp-tools
+dotnet restore
+```
+
+### Build all projects
+
+```bash
+dotnet build jff-csharp-tools.sln
+```
+
+### Build a specific package
+
+```bash
+dotnet build jff-csharp-tools-9/jff-csharp-tools-9.csproj
+```
+
+### Pack NuGet packages
+
+```bash
+dotnet pack jff-csharp-tools-9/jff-csharp-tools-9.csproj --configuration Release
+```
+
+Or use the provided release script:
+
+```bash
+bash run-releaseBuild.sh
+```
+
+---
+
+## Documentation
+
+Full technical documentation is located in [`/docs`](./docs):
+
+| File | Description |
+|------|-------------|
+| [`/docs/architecture/context.puml`](./docs/architecture/context.puml) | C4 Context diagram (PlantUML) |
+| [`/docs/architecture/containers.puml`](./docs/architecture/containers.puml) | C4 Containers diagram (PlantUML) |
+| [`/docs/architecture/components.puml`](./docs/architecture/components.puml) | C4 Components diagram (PlantUML) |
+| [`/docs/adr/ADR-001.md`](./docs/adr/ADR-001.md) | Architecture Decision Record — multi-target layered library |
+| [`/docs/database/schema.md`](./docs/database/schema.md) | Base entity schema and conventions |
+| [`/docs/flows/main-flows.md`](./docs/flows/main-flows.md) | Main runtime flows (auth, CRUD, pagination, exception handling) |

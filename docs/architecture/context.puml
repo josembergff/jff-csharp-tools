@@ -1,0 +1,28 @@
+@startuml C4 Context - jff-csharp-tools
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title System Context — jff-csharp-tools
+
+Person(developer, "Developer", "A .NET developer who consumes the jff-csharp-tools NuGet packages to build APIs and services.")
+
+System(jffTools, "jff-csharp-tools", "Open-source NuGet library providing reusable utilities for .NET Core applications: base entities, repository/service patterns, CRUD controllers, filters, and extensions.")
+
+System_Ext(nuget, "NuGet.org", "Public package registry. Hosts jff-csharp-tools-6, jff-csharp-tools-8, and jff-csharp-tools-9 packages.")
+System_Ext(efCore, "Entity Framework Core", "ORM used by the library's repository layer to interact with any relational database.")
+System_Ext(aspnet, "ASP.NET Core", "Web framework used by the library's presentation layer (controllers, filters, endpoints).")
+System_Ext(jwtBearer, "JWT Bearer / ASP.NET Core Authentication", "Used by DefaultController and TokenEnumFilter for token-based authentication.")
+System_Ext(serilog, "Serilog", "Structured logging framework. LogSerilogEntity maps log entries to a database table.")
+System_Ext(consumerApp, "Consumer .NET Application", "API or service built by the developer that references jff-csharp-tools as a dependency.")
+
+Rel(developer, nuget, "Installs package via", "dotnet add package / NuGet PM")
+Rel(nuget, jffTools, "Distributes")
+Rel(developer, consumerApp, "Builds and operates")
+Rel(consumerApp, jffTools, "References as library dependency")
+Rel(jffTools, efCore, "Uses for database access")
+Rel(jffTools, aspnet, "Uses for HTTP pipeline")
+Rel(jffTools, jwtBearer, "Uses for authentication")
+Rel(jffTools, serilog, "Provides entity mapping for")
+
+@enduml
