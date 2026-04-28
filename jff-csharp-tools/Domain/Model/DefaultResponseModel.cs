@@ -42,6 +42,11 @@ namespace JffCsharpTools.Domain.Model
         public List<string> MessageList { get; set; } = new List<string>();
 
         /// <summary>
+        /// List of additional messages (validations, warnings, etc.)
+        /// </summary>
+        public List<string> ErrorMessageList { get; set; } = new List<string>();
+
+        /// <summary>
         /// Result data of the operation
         /// </summary>
         public T Result { get; set; }
@@ -55,7 +60,7 @@ namespace JffCsharpTools.Domain.Model
             get
             {
                 var checkStatus = StatusCode == HttpStatusCode.OK || StatusCode == HttpStatusCode.NoContent;
-                var checkMessage = string.IsNullOrEmpty(Message) && MessageList?.Any() != true;
+                var checkMessage = string.IsNullOrEmpty(Error) && ErrorMessageList?.Any() != true && string.IsNullOrEmpty(BaseException) && string.IsNullOrEmpty(StackTrace);
                 var checkResult = checkStatus && checkMessage;
                 return checkResult;
             }
