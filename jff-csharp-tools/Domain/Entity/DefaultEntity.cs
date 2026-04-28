@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using JffCsharpTools.Domain.Filters;
 
@@ -12,32 +11,8 @@ namespace JffCsharpTools.Domain.Entity
     /// to enable strongly-typed filtering and querying capabilities.
     /// </summary>
     /// <typeparam name="TEntity">The concrete entity type that inherits from this base class</typeparam>
-    public class DefaultEntity<TEntity> where TEntity : DefaultEntity<TEntity>, new()
+    public class DefaultEntity<TEntity> : DefaultBasicEntity where TEntity : DefaultEntity<TEntity>, new()
     {
-        /// <summary>
-        /// Unique identifier for the entity. Serves as the primary key in database storage.
-        /// </summary>
-        [Key]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Identifier of the user who created this entity.
-        /// Used for auditing and access control purposes.
-        /// </summary>
-        public int CreatorUserId { get; set; }
-
-        /// <summary>
-        /// Timestamp indicating when the entity was created.
-        /// Automatically set during entity creation and never modified afterwards.
-        /// </summary>
-        public DateTime CreatedAt { get; set; }
-
-        /// <summary>
-        /// Optional timestamp indicating when the entity was last updated.
-        /// Null for entities that have never been modified after creation.
-        /// </summary>
-        public DateTime? UpdatedAt { get; set; }
-
         /// <summary>
         /// Creates a default filter expression based on the current entity's property values.
         /// This method builds a dynamic LINQ expression that matches entities with the same
