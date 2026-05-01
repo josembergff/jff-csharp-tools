@@ -10,8 +10,8 @@ title Component Diagram — jff-csharp-tools (all packages)
 '--------------------------------------------------
 Container_Boundary(core, "jff-csharp-tools (Core)") {
 
-    Component(defaultEntity, "DefaultEntity<TEntity>", "C# abstract class", "Base entity with int Id, int CreatorUserId, CreatedAt, UpdatedAt and GetFilter() using PredicateBuilderFilter.")
-    Component(defaultGuidEntity, "DefaultGuidEntity<TEntity>", "C# abstract class", "Base entity variant using Guid as CreatorUserId.")
+    Component(defaultEntity, "DefaultEntity", "C# abstract class", "Base entity with int Id, int CreatorUserId, CreatedAt, UpdatedAt and GetFilter() using PredicateBuilderFilter.")
+    Component(defaultGuidEntity, "DefaultGuidEntity", "C# abstract class", "Base entity variant using Guid as CreatorUserId.")
     Component(logSerilogEntity, "LogSerilogEntity", "C# class", "Entity that maps structured Serilog log entries to a database table.")
 
     Component(defaultResponseModel, "Result<T>", "C# class", "Generic API response wrapper with Result, StatusCode, Error, Message, and Success flag.")

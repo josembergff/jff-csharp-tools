@@ -17,7 +17,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
     /// <typeparam name="TEntity">The entity type that inherits from DefaultEntity</typeparam>
     public abstract class DefaultCRUDController<TService, TEntity> : DefaultController
         where TService : IDefaultService
-        where TEntity : DefaultEntity<TEntity>, new()
+        where TEntity : DefaultEntity, new()
     {
         /// <summary>
         /// The service instance used for performing CRUD operations

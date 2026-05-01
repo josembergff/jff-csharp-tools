@@ -12,7 +12,7 @@ public static class CrudEndpoints
         string route,
         IDefaultService service,
         CrudDto CrudDto = default)
-        where TEntity : DefaultEntity<TEntity>, new()
+        where TEntity : DefaultEntity, new()
     {
         if (!CrudDto.ExcludeGetAll)
             group.MapGet(route, async (HttpContext ctx) => CrudDto.IgnoreCurrentUser ? (await service.GetByUser<TEntity>(ctx.CurrentUserId())).ReturnResult() : (await service.Get<TEntity>()).ReturnResult());

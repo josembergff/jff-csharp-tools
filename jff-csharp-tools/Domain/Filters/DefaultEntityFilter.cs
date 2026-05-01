@@ -10,7 +10,7 @@ namespace JffCsharpTools.Domain.Filters
     /// for creation and update timestamps. This class extends DefaultFilter to add entity-specific filtering.
     /// </summary>
     /// <typeparam name="TEntity">The entity type that inherits from DefaultEntity</typeparam>
-    public class DefaultEntityFilter<TEntity> : DefaultFilter<DefaultEntity<TEntity>> where TEntity : DefaultEntity<TEntity>, new()
+    public class DefaultEntityFilter<TEntity> : DefaultFilter<DefaultEntity> where TEntity : DefaultEntity, new()
     {
         /// <summary>
         /// Start date for filtering records by creation date (inclusive).
@@ -42,7 +42,7 @@ namespace JffCsharpTools.Domain.Filters
         /// them using logical AND operations. Uses caching to avoid rebuilding the expression multiple times.
         /// </summary>
         /// <returns>A LINQ expression that can be used to filter DefaultEntity records</returns>
-        public override Expression<Func<DefaultEntity<TEntity>, bool>> Where()
+        public override Expression<Func<DefaultEntity, bool>> Where()
         {
             // Return cached expression if already built
             if (_where != null)
@@ -51,7 +51,7 @@ namespace JffCsharpTools.Domain.Filters
             }
 
             // Collection to store individual filter predicates
-            var whereList = new List<Expression<Func<DefaultEntity<TEntity>, bool>>>();
+            var whereList = new List<Expression<Func<DefaultEntity, bool>>>();
 
             // Add CreatedAt start date filter if specified and within valid range
             if (CreatedAtStart != null && CreatedAtStart > DateTime.MinValue && CreatedAtStart < DateTime.MaxValue)
@@ -72,10 +72,10 @@ namespace JffCsharpTools.Domain.Filters
                 whereList.Add(x => (x.UpdatedAt ?? DateTime.UtcNow).Date <= (UpdatedAtEnd ?? DateTime.UtcNow).Date);
 
             // Start with a base expression that always returns true
-            Expression<Func<DefaultEntity<TEntity>, bool>> where = PredicateBuilderFilter.True<DefaultEntity<TEntity>>();
+            Expression<Func<DefaultEntity, bool>> where = PredicateBuilderFilter.True<DefaultEntity>();
 
             // Combine all filter predicates using logical AND operations
-            foreach (Expression<Func<DefaultEntity<TEntity>, bool>> predicate in whereList)
+            foreach (Expression<Func<DefaultEntity, bool>> predicate in whereList)
             {
                 where = PredicateBuilderFilter.And(where, predicate);
             }
