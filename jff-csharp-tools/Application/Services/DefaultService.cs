@@ -4,37 +4,40 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
-using JffCsharpTools9Lib.Application.Interfaces;
+using JffCsharpTools.Application.Interfaces;
+using JffCsharpTools.Domain.Interfaces.Repositories;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JffCsharpTools9Lib.Application.Services
+namespace JffCsharpTools.Application.Services
 {
-    public class DefaultGuidService<T> : IDefaultGuidService<T> where T : DbContext
+    public class DefaultService : IDefaultService
     {
-        public IDefaultGuidRepository<T> defaultGuidRepository { get; set; }
+        public IDefaultRepository defaultRepository { get; set; }
 
-        public DefaultGuidService(IDefaultGuidRepository<T> defaultGuidRepository)
+        public DefaultService(IDefaultRepository defaultRepository)
         {
-            this.defaultGuidRepository = defaultGuidRepository;
+            this.defaultRepository = defaultRepository;
         }
 
-        public virtual async Task<Result<int>> Create<TEntity>(Guid IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<int>> Create<TEntity>(int IdUser, TEntity entity, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
-            entity = entity.ConvertDatesToUtc();
             var idReturn = new Result<int>() { Value = 0 };
+            entity = entity.ConvertDatesToUtc();
             entity.CreatedAt = DateTime.UtcNow;
-            entity.CreatorUserId = !filterCurrentUser && entity.CreatorUserId != Guid.Empty ? entity.CreatorUserId : IdUser;
-            var returnCreate = await defaultGuidRepository.Create(entity);
+            entity.CreatorUserId = !filterCurrentUser && entity.CreatorUserId > 0 ? entity.CreatorUserId : IdUser;
+            var returnCreate = await defaultRepository.Create(entity);
             idReturn.Value = returnCreate.Id;
             return idReturn;
         }
 
-        public virtual async Task<Result<IEnumerable<TEntity>>> Get<TEntity>(TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<IEnumerable<TEntity>>> Get<TEntity>(TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<IEnumerable<TEntity>>();
 
-            var userFilterObjBase = await defaultGuidRepository.Get(entityFilter.GetFilter(), includes);
+            var userFilterObjBase = await defaultRepository.Get(entityFilter.GetFilter(), includes);
             if (userFilterObjBase != null)
             {
                 returnValue.Value = userFilterObjBase.ToList();
@@ -42,11 +45,11 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<IEnumerable<TEntity>>> GetByUser<TEntity>(Guid IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<IEnumerable<TEntity>>> GetByUser<TEntity>(int IdUser, TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<IEnumerable<TEntity>>();
 
-            var userObjBase = await defaultGuidRepository.GetByUser<TEntity>(IdUser, includes);
+            var userObjBase = await defaultRepository.GetByUser<TEntity>(IdUser, includes);
             if (userObjBase != null)
             {
                 returnValue.Value = userObjBase.ToList();
@@ -54,11 +57,11 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<IEnumerable<TEntity>>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<Result<IEnumerable<TEntity>>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             var returnValue = new Result<IEnumerable<TEntity>>();
 
-            var userObjBase = await defaultGuidRepository.GetByFilter<TEntity, TFilter>(filter, includes);
+            var userObjBase = await defaultRepository.GetByFilter<TEntity, TFilter>(filter, includes);
             if (userObjBase != null)
             {
                 returnValue.Value = userObjBase.ToList();
@@ -66,10 +69,10 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<TEntity>> GetByKey<TEntity, Tkey>(Guid IdUser, Tkey key, string[] includes = null, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<TEntity>> GetByKey<TEntity, Tkey>(int IdUser, Tkey key, string[] includes = null, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<TEntity>();
-            var userObjBase = await defaultGuidRepository.GetByKey<TEntity, Tkey>(key, includes);
+            var userObjBase = await defaultRepository.GetByKey<TEntity, Tkey>(key, includes);
             if (userObjBase != null)
             {
                 if (filterCurrentUser)
@@ -92,10 +95,10 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, Guid IdUser = default) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, int IdUser = 0) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<PaginationResult<TEntity>>();
-            var userFilterObjBase = await defaultGuidRepository.GetPaginated(pagination, filter, includes);
+            var userFilterObjBase = await defaultRepository.GetPaginated(pagination, filter, includes);
             if (userFilterObjBase != null)
             {
                 if (filterCurrentUser)
@@ -110,14 +113,14 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             var returnValue = new Result<PaginationResult<TEntity>>();
             if (filter == null)
             {
                 filter = new TFilter();
             }
-            var userFilterObjBase = await defaultGuidRepository.GetPaginatedByFilter<TEntity, TFilter>(filter, includes);
+            var userFilterObjBase = await defaultRepository.GetPaginatedByFilter<TEntity, TFilter>(filter, includes);
             if (userFilterObjBase != null)
             {
                 returnValue.Value = userFilterObjBase;
@@ -125,10 +128,10 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> paginacao, Guid IdUser, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> paginacao, int IdUser, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<PaginationResult<TEntity>>();
-            var userFilterObjBase = await defaultGuidRepository.GetPaginatedByUser(paginacao, IdUser, includes);
+            var userFilterObjBase = await defaultRepository.GetPaginatedByUser(paginacao, IdUser, includes);
             if (userFilterObjBase != null)
             {
                 returnValue.Value = userFilterObjBase;
@@ -136,17 +139,17 @@ namespace JffCsharpTools9Lib.Application.Services
             return returnValue;
         }
 
-        public virtual async Task<Result<bool>> DeleteByKey<TEntity, TKey>(Guid IdUser, TKey key, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<bool>> DeleteByKey<TEntity, TKey>(int IdUser, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<bool>() { Value = false };
-            var userObjBase = await defaultGuidRepository.GetByKey<TEntity, TKey>(key);
+            var userObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
             if (userObjBase != null)
             {
                 if (filterCurrentUser)
                 {
                     if (userObjBase.CreatorUserId == IdUser)
                     {
-                        returnValue.Value = await defaultGuidRepository.DeleteByKey<TEntity, TKey>(key);
+                        returnValue.Value = await defaultRepository.DeleteByKey<TEntity, TKey>(key);
                     }
                     else
                     {
@@ -156,16 +159,16 @@ namespace JffCsharpTools9Lib.Application.Services
                 }
                 else
                 {
-                    returnValue.Value = await defaultGuidRepository.DeleteByKey<TEntity, TKey>(key);
+                    returnValue.Value = await defaultRepository.DeleteByKey<TEntity, TKey>(key);
                 }
             }
             return returnValue;
         }
-        public virtual async Task<Result<bool>> UpdateByKey<TEntity, TKey>(Guid IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<Result<bool>> UpdateByKey<TEntity, TKey>(int IdUser, TEntity entity, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity<TEntity>, new()
         {
             var returnValue = new Result<bool>() { Value = false };
             entity = entity.ConvertDatesToUtc();
-            var entityObjBase = await defaultGuidRepository.GetByKey<TEntity, TKey>(key);
+            var entityObjBase = await defaultRepository.GetByKey<TEntity, TKey>(key);
             entity.UpdatedAt = DateTime.UtcNow;
             if (entityObjBase != null)
             {
@@ -173,7 +176,7 @@ namespace JffCsharpTools9Lib.Application.Services
                 {
                     if (entityObjBase.CreatorUserId == IdUser)
                     {
-                        returnValue.Value = await defaultGuidRepository.UpdateByKey(entity, key);
+                        returnValue.Value = await defaultRepository.UpdateByKey(entity, key);
                     }
                     else
                     {
@@ -183,7 +186,7 @@ namespace JffCsharpTools9Lib.Application.Services
                 }
                 else
                 {
-                    returnValue.Value = await defaultGuidRepository.UpdateByKey(entity, key);
+                    returnValue.Value = await defaultRepository.UpdateByKey(entity, key);
                 }
             }
             return returnValue;
