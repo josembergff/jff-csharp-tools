@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using JffCsharpTools.Domain.Filters;
 
@@ -11,15 +12,38 @@ namespace JffCsharpTools.Domain.Entity
     /// implementing a self-referencing generic pattern to enable strongly-typed filtering and querying capabilities.
     /// </summary>
     /// <typeparam name="TEntity">The concrete entity type that inherits from this base class</typeparam>
-    public class DefaultGuidEntity<TEntity> : DefaultBasicGuidEntity where TEntity : DefaultGuidEntity<TEntity>, new()
+    public class DefaultGuidEntity
     {
+        /// <summary>
+        /// Unique identifier for the entity. Serves as the primary key in database storage.
+        /// </summary>
+        [Key]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Identifier of the user who created this entity.
+        /// Used for auditing and access control purposes.
+        /// </summary>
+        public Guid CreatorUserId { get; set; }
+
+        /// <summary>
+        /// Timestamp indicating when the entity was created.
+        /// Automatically set during entity creation and never modified afterwards.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Optional timestamp indicating when the entity was last updated.
+        /// Null for entities that have never been modified after creation.
+        /// </summary>
+        public DateTime? UpdatedAt { get; set; }
         /// <summary>
         /// Creates a default filter expression based on the current entity's property values.
         /// This method builds a dynamic LINQ expression that matches entities with the same
         /// Id, CreatorUserId, CreatedAt, and UpdatedAt values as this instance.
         /// </summary>
         /// <returns>A LINQ expression for filtering entities of type TEntity</returns>
-        protected Expression<Func<TEntity, bool>> GetDefaultFilter()
+        protected Expression<Func<TEntity, bool>> GetDefaultFilter<TEntity>() where TEntity : DefaultGuidEntity, new()
         {
             // Collection to store individual filter predicates
             var filterList = new List<Expression<Func<TEntity, bool>>>();
@@ -57,9 +81,9 @@ namespace JffCsharpTools.Domain.Entity
         /// to provide custom filtering logic while optionally including the base filter.
         /// </summary>
         /// <returns>A LINQ expression for filtering entities of type TEntity</returns>
-        public virtual Expression<Func<TEntity, bool>> GetFilter()
+        public virtual Expression<Func<TEntity, bool>> GetFilter<TEntity>() where TEntity : DefaultGuidEntity, new()
         {
-            return GetDefaultFilter();
+            return GetDefaultFilter<TEntity>();
         }
     }
 }

@@ -13,7 +13,7 @@ built-in LINQ filtering.
 
 ---
 
-### `DefaultEntity<TEntity>`
+### `DefaultEntity`
 
 Namespace: `JffCsharpTools.Domain.Entity`  
 Package: `jff-csharp-tools` (core)
@@ -35,7 +35,7 @@ public class Product : DefaultEntity<Product>
 
 ---
 
-### `DefaultGuidEntity<TEntity>`
+### `DefaultGuidEntity`
 
 Namespace: `JffCsharpTools.Domain.Entity`  
 Package: `jff-csharp-tools` (core)
@@ -98,7 +98,7 @@ Because the library provides **base classes**, each consumer application defines
 entity graph. The only structural relationship enforced by the library is:
 
 ```
-[Consumer Entity]  ──extends──▶  DefaultEntity<TEntity>  (or DefaultGuidEntity<TEntity>)
+[Consumer Entity]  ──extends──▶  DefaultEntity  (or DefaultGuidEntity)
 ```
 
 All consumer entities share the audit columns (`Id`, `CreatorUserId`, `CreatedAt`, `UpdatedAt`).
