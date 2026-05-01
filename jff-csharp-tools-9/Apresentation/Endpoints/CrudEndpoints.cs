@@ -1,6 +1,6 @@
 using JffCsharpTools.Application.DTOs;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools9.Domain.Interface.Service;
+using JffCsharpTools9.Application.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
