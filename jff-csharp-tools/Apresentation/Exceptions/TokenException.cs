@@ -1,5 +1,5 @@
 using System;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 
 namespace JffCsharpTools.Apresentation.Exceptions
 {

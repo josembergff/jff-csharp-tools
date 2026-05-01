@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 using JffCsharpTools6.Domain.Interface.Repository;
 using JffCsharpTools6.Domain.Interface.Service;
 using Microsoft.EntityFrameworkCore;
@@ -97,9 +97,9 @@ namespace JffCsharpTools6.Domain.Service
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationModel<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, int IdUser = 0) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, int IdUser = 0) where TEntity : DefaultEntity<TEntity>, new()
         {
-            var returnValue = new Result<PaginationModel<TEntity>>();
+            var returnValue = new Result<PaginationResult<TEntity>>();
             var userFilterObjBase = await defaultRepository.GetPaginated(pagination, filter, includes);
             if (userFilterObjBase != null)
             {
@@ -115,9 +115,9 @@ namespace JffCsharpTools6.Domain.Service
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationModel<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
-            var returnValue = new Result<PaginationModel<TEntity>>();
+            var returnValue = new Result<PaginationResult<TEntity>>();
             if (filter == null)
             {
                 filter = new TFilter();
@@ -130,9 +130,9 @@ namespace JffCsharpTools6.Domain.Service
             return returnValue;
         }
 
-        public virtual async Task<Result<PaginationModel<TEntity>>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> paginacao, int IdUser, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<Result<PaginationResult<TEntity>>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> paginacao, int IdUser, string[] includes = null) where TEntity : DefaultEntity<TEntity>, new()
         {
-            var returnValue = new Result<PaginationModel<TEntity>>();
+            var returnValue = new Result<PaginationResult<TEntity>>();
             var userFilterObjBase = await defaultRepository.GetPaginatedByUser(paginacao, IdUser, includes);
             if (userFilterObjBase != null)
             {

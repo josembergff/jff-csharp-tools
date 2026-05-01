@@ -1,5 +1,5 @@
 using JffCsharpTools.Apresentation.Exceptions;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Constants;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;

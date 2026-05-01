@@ -117,8 +117,8 @@ Service -> Repository: GetPaginated(query, skip, take, order)
 Repository -> DB: SELECT COUNT(*) ...
 Repository -> DB: SELECT * ... OFFSET skip LIMIT take ORDER BY Name
 DB --> Repository: (total, IEnumerable<TEntity>)
-Repository --> Service: PaginationModel<TEntity>\n{ List, Total, TotalPages }
-Service --> Controller: Result<PaginationModel<TEntity>>
+Repository --> Service: PaginationResult<TEntity>\n{ List, Total, TotalPages }
+Service --> Controller: Result<PaginationResult<TEntity>>
 Controller --> Client: 200 OK { list: [...],\n total: 50, page: 2, totalPages: 5 }
 @enduml
 ```

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using Jff.Csharp.Tools.Domain.Exceptions;
 
-namespace JffCsharpTools.Common
+namespace JffCsharpTools.Application.Common
 {
     /// <summary>
     /// Generic default response model for application operations.

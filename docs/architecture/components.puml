@@ -15,10 +15,10 @@ Container_Boundary(core, "jff-csharp-tools (Core)") {
     Component(logSerilogEntity, "LogSerilogEntity", "C# class", "Entity that maps structured Serilog log entries to a database table.")
 
     Component(defaultResponseModel, "Result<T>", "C# class", "Generic API response wrapper with Result, StatusCode, Error, Message, and Success flag.")
-    Component(paginationModel, "PaginationModel<TEntity>", "C# class", "Pagination parameters (Page, CountPerPage, Order) plus paginated results (List, Total, TotalPages).")
+    Component(paginationModel, "PaginationResult<TEntity>", "C# class", "Pagination parameters (Page, CountPerPage, Order) plus paginated results (List, Total, TotalPages).")
     Component(fileModel, "FileModel", "C# class", "Represents a file with name, content, and content-type.")
     Component(chartModel, "ChartModel / SerieChartModel", "C# classes", "Models for chart data series rendering.")
-    Component(crudOptionsModel, "CrudOptionsModel / CrudOptions", "C# class/struct", "Options to toggle individual CRUD operations on endpoints.")
+    Component(CrudDtoModel, "CrudDtoModel / CrudDto", "C# class/struct", "Options to toggle individual CRUD operations on endpoints.")
     Component(typeModel, "TypeModel", "C# class", "Generic key-value pair model for dropdown/type lists.")
 
     Component(defaultFilter, "DefaultFilter<TEntity>", "C# class", "Base filter with Page, Count, OrderBy, Asc, SkipTotal and virtual Where() expression.")

@@ -1,6 +1,6 @@
 using System.Net;
-using JffCsharpTools.Common;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Application.Common;
+using JffCsharpTools.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
 public static class DefaultResponseModelExtension

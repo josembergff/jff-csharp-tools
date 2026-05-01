@@ -1,5 +1,5 @@
 
-namespace JffCsharpTools.Common
+namespace JffCsharpTools.Application.Common
 {
     /// <summary>
     /// Generic default response model for application operations.

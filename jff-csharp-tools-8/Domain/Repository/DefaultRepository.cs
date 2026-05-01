@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 using JffCsharpTools8.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -244,7 +244,7 @@ namespace JffCsharpTools8.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter);
             if (includes != null && includes.Any())
@@ -283,10 +283,10 @@ namespace JffCsharpTools8.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationModel<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter.Where());
-            var pagedList = new PaginationModel<TEntity>(filter);
+            var pagedList = new PaginationResult<TEntity>(filter);
 
             if (includes != null && includes.Any())
                 foreach (string include in includes)
@@ -324,7 +324,7 @@ namespace JffCsharpTools8.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public async Task<PaginationModel<TEntity>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(f => f.CreatorUserId == idUser);
             if (includes != null && includes.Any())

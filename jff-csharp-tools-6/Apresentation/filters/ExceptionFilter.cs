@@ -1,7 +1,6 @@
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Apresentation.Exceptions;
-using JffCsharpTools.Common;
 using JffCsharpTools.Domain.Constants;
-using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;

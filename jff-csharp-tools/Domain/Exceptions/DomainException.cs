@@ -1,7 +1,7 @@
 
 using System;
 using System.Collections.Generic;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 
 namespace Jff.Csharp.Tools.Domain.Exceptions
 {

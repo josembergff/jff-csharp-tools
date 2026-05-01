@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 using JffCsharpTools9.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +89,7 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>Paginated results with metadata including total count and page information</returns>
         [HttpGet]
         [Route("pagination")]
-        public virtual async Task<ActionResult<PaginationModel<TEntity>>> GetPagination([FromQuery] PaginationModel<TEntity> filter)
+        public virtual async Task<ActionResult<PaginationResult<TEntity>>> GetPagination([FromQuery] PaginationResult<TEntity> filter)
         {
             var returnObj = await serviceCrud.GetPaginated(filter, f => true, IdUser: CurrentGuidUser_FromBearerToken, filterCurrentUser: filterCurrentUser);
             return ReturnAction(returnObj);

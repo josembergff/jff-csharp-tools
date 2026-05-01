@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using JffCsharpTools.Apresentation.Exceptions;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

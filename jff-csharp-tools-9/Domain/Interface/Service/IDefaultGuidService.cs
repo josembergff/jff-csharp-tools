@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using JffCsharpTools.Common;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 using JffCsharpTools9.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -80,7 +80,7 @@ namespace JffCsharpTools9.Domain.Interface.Service
         /// <param name="filter">Lambda expression to filter the entities</param>
         /// <param name="includes">Optional array of navigation property names to include in the query</param>
         /// <returns>A response model containing the paginated results with metadata</returns>
-        Task<Result<PaginationModel<TEntity>>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, Guid IdUser = default) where TEntity : DefaultGuidEntity<TEntity>, new();
+        Task<Result<PaginationResult<TEntity>>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool filterCurrentUser = true, Guid IdUser = default) where TEntity : DefaultGuidEntity<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination using a custom filter object
@@ -90,7 +90,7 @@ namespace JffCsharpTools9.Domain.Interface.Service
         /// <param name="filter">The filter object containing search criteria and pagination parameters</param>
         /// <param name="includes">Optional array of navigation property names to include in the query</param>
         /// <returns>A response model containing the paginated and filtered results</returns>
-        Task<Result<PaginationModel<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
+        Task<Result<PaginationResult<TEntity>>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination filtered by user ID
@@ -100,7 +100,7 @@ namespace JffCsharpTools9.Domain.Interface.Service
         /// <param name="IdUser">The user ID to filter entities by (usually CreatorUserId)</param>
         /// <param name="includes">Optional array of navigation property names to include in the query</param>
         /// <returns>A response model containing the paginated user-specific results</returns>
-        Task<Result<PaginationModel<TEntity>>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> paginacao, Guid IdUser, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new();
+        Task<Result<PaginationResult<TEntity>>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> paginacao, Guid IdUser, string[] includes = null) where TEntity : DefaultGuidEntity<TEntity>, new();
 
         /// <summary>
         /// Updates an existing entity by its primary key with user validation
