@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using JffCsharpTools.Apresentation.Exceptions;
+using JffCsharpTools.Common;
 using JffCsharpTools.Domain.Enums;
 using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Authentication;
@@ -156,13 +157,13 @@ namespace JffCsharpTools8.Apresentation.Controllers
         /// <typeparam name="TRetorno">The type of data being returned in the response</typeparam>
         /// <param name="returnObj">The response model containing success status, data, and error information</param>
         /// <returns>ActionResult with appropriate HTTP status code (200 OK, 400 Bad Request, or 401 Unauthorized)</returns>
-        protected ActionResult<TRetorno> ReturnAction<TRetorno>(DefaultResponseModel<TRetorno> returnObj)
+        protected ActionResult<TRetorno> ReturnAction<TRetorno>(Result<TRetorno> returnObj)
         {
             try
             {
                 if (returnObj != null && returnObj.Success)
                 {
-                    return Ok(returnObj.Result);
+                    return Ok(returnObj.Value);
                 }
                 else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -176,7 +177,7 @@ namespace JffCsharpTools8.Apresentation.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error! An internal server error has occurred, please contact your system administrator.");
-                var returnAction = new DefaultResponseModel<TRetorno>();
+                var returnAction = new Result<TRetorno>();
                 returnAction.Message = "Error! An internal server error has occurred, please contact your system administrator.";
                 returnAction.Error = ex.Message;
                 return Problem(returnAction.Error, statusCode: (int)HttpStatusCode.InternalServerError, title: returnAction.Message);

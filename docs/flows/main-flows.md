@@ -66,7 +66,7 @@ Service -> Repository: SaveChanges()
 Repository -> DB: INSERT INTO table
 DB --> Repository: entity.Id (auto-generated)
 Repository --> Service: entity.Id
-Service --> Controller: DefaultResponseModel<int> { Result = Id }
+Service --> Controller: Result<int> { Result = Id }
 Controller -> Controller: ReturnAction() / ReturnResult()
 Controller --> Client: 200 OK { result: <new Id> }
 @enduml
@@ -90,7 +90,7 @@ Service -> Repository: Get<TEntity>(filter: x => x.CreatorUserId == IdUser)
 Repository -> DB: SELECT * FROM table\nWHERE CreatorUserId = IdUser
 DB --> Repository: IEnumerable<TEntity>
 Repository --> Service: IEnumerable<TEntity>
-Service --> Controller: DefaultResponseModel<IEnumerable<TEntity>>
+Service --> Controller: Result<IEnumerable<TEntity>>
 Controller --> Client: 200 OK [ ... entities ... ]
 @enduml
 ```
@@ -118,7 +118,7 @@ Repository -> DB: SELECT COUNT(*) ...
 Repository -> DB: SELECT * ... OFFSET skip LIMIT take ORDER BY Name
 DB --> Repository: (total, IEnumerable<TEntity>)
 Repository --> Service: PaginationModel<TEntity>\n{ List, Total, TotalPages }
-Service --> Controller: DefaultResponseModel<PaginationModel<TEntity>>
+Service --> Controller: Result<PaginationModel<TEntity>>
 Controller --> Client: 200 OK { list: [...],\n total: 50, page: 2, totalPages: 5 }
 @enduml
 ```
@@ -145,10 +145,10 @@ alt Entity found and belongs to user (or filterCurrentUser=false)
     Service -> Repository: Update(entity)
     Repository -> DB: UPDATE table SET ... WHERE Id = key
     Service -> Repository: SaveChanges()
-    Service --> Controller: DefaultResponseModel<bool> { Result = true }
+    Service --> Controller: Result<bool> { Result = true }
     Controller --> Client: 200 OK { result: true }
 else Entity not found or not owned by user
-    Service --> Controller: DefaultResponseModel<bool>\n{ StatusCode = 404/403 }
+    Service --> Controller: Result<bool>\n{ StatusCode = 404/403 }
     Controller --> Client: 404 Not Found / 403 Forbidden
 end
 @enduml
@@ -175,10 +175,10 @@ alt Entity found and belongs to user
     Service -> Repository: Delete(entity)
     Repository -> DB: DELETE FROM table WHERE Id = key
     Service -> Repository: SaveChanges()
-    Service --> Controller: DefaultResponseModel<bool> { Result = true }
+    Service --> Controller: Result<bool> { Result = true }
     Controller --> Client: 200 OK { result: true }
 else Not found or not owned
-    Service --> Controller: DefaultResponseModel<bool>\n{ StatusCode = 404/403 }
+    Service --> Controller: Result<bool>\n{ StatusCode = 404/403 }
     Controller --> Client: 404 / 403
 end
 @enduml

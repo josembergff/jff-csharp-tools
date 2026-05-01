@@ -14,7 +14,7 @@ Container_Boundary(core, "jff-csharp-tools (Core)") {
     Component(defaultGuidEntity, "DefaultGuidEntity<TEntity>", "C# abstract class", "Base entity variant using Guid as CreatorUserId.")
     Component(logSerilogEntity, "LogSerilogEntity", "C# class", "Entity that maps structured Serilog log entries to a database table.")
 
-    Component(defaultResponseModel, "DefaultResponseModel<T>", "C# class", "Generic API response wrapper with Result, StatusCode, Error, Message, and Success flag.")
+    Component(defaultResponseModel, "Result<T>", "C# class", "Generic API response wrapper with Result, StatusCode, Error, Message, and Success flag.")
     Component(paginationModel, "PaginationModel<TEntity>", "C# class", "Pagination parameters (Page, CountPerPage, Order) plus paginated results (List, Total, TotalPages).")
     Component(fileModel, "FileModel", "C# class", "Represents a file with name, content, and content-type.")
     Component(chartModel, "ChartModel / SerieChartModel", "C# classes", "Models for chart data series rendering.")
@@ -69,7 +69,7 @@ Container_Boundary(versioned, "jff-csharp-tools-6 / -8 / -9 (versioned packages)
 
     Component(enumConverter, "EnumConverter", "System.Text.Json Converter", "Custom JSON converter to serialize/deserialize enums as strings.")
     Component(httpContextExt, "HttpContextExtension", "C# static class", "HttpContext helpers: CurrentUserId(), GetBearerToken().")
-    Component(defaultResponseExt, "DefaultResponseModelExtension", "C# static class", "Extension: ReturnResult() converts DefaultResponseModel<T> to IResult for Minimal API responses.")
+    Component(defaultResponseExt, "DefaultResponseModelExtension", "C# static class", "Extension: ReturnResult() converts Result<T> to IResult for Minimal API responses.")
     Component(attributeEnum, "AttributeEnum", "C# Attribute", "Custom attribute for annotating enum members with metadata.")
 }
 

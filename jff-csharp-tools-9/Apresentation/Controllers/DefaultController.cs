@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using JffCsharpTools.Apresentation.Exceptions;
+using JffCsharpTools.Common;
 using JffCsharpTools.Domain.Enums;
-using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -96,11 +96,11 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <typeparam name="TRetorno">The type of data being returned</typeparam>
         /// <param name="returnObj">The response model containing success status, data, and error information</param>
         /// <returns>Formatted ActionResult with appropriate HTTP status code</returns>
-        protected ActionResult<TRetorno> ReturnAction<TRetorno>(DefaultResponseModel<TRetorno> returnObj)
+        protected ActionResult<TRetorno> ReturnAction<TRetorno>(Result<TRetorno> returnObj)
         {
             if (returnObj != null && returnObj.Success)
             {
-                return Ok(returnObj.Result);
+                return Ok(returnObj.Value);
             }
             else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
             {
