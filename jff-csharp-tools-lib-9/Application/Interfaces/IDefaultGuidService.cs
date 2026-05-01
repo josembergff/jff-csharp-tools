@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9.Domain.Interfaces.Repositories;
+using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace JffCsharpTools9.Application.Interfaces
+namespace JffCsharpTools9Lib.Application.Interfaces
 {
     /// <summary>
     /// Default service interface providing CRUD operations for entities with user-based access control
