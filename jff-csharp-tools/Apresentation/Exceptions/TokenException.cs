@@ -1,4 +1,5 @@
 using System;
+using JffCsharpTools.Application.Common;
 
 namespace JffCsharpTools.Apresentation.Exceptions
 {
@@ -32,6 +33,24 @@ namespace JffCsharpTools.Apresentation.Exceptions
         /// <param name="message">The message that describes the token-related error</param>
         /// <param name="innerException">The exception that is the cause of the current exception</param>
         public TokenException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of TokenException using a Result object that contains error details.
+        /// </summary>
+        /// <param name="result">The Result object that contains error details</param>
+        public TokenException(Result result) : base(result.Error)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of TokenException using a Result object that contains error details
+        /// and a reference to the inner exception that is the cause of this exception.
+        /// </summary>
+        /// <param name="result">The Result object that contains error details</param>
+        /// <param name="innerException">The exception that is the cause of the current exception</param>
+        public TokenException(Result result, Exception innerException) : base(result.Error, innerException)
         {
         }
     }

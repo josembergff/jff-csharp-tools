@@ -17,7 +17,7 @@ namespace JffCsharpTools.Domain.Extensions
         public static DateTime StartWeek(this DateTime dt, DayOfWeek startOfWeek)
         {
             int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
-            return dt.AddDays(-1 * diff).Date;
+            return dt.AddDays(-1 * diff).Date.ToUniversalTime();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace JffCsharpTools.Domain.Extensions
         /// <returns>The age in complete years</returns>
         public static int Age(this DateTime dateBirth)
         {
-            var today = DateTime.Today.Date;
+            var today = DateTime.Today.Date.ToUniversalTime();
             var age = today.Year - dateBirth.Year;
 
             if (dateBirth.Date > today.AddYears(-age)) age--;
@@ -43,7 +43,7 @@ namespace JffCsharpTools.Domain.Extensions
         /// <returns>The age in complete years as of the reference date</returns>
         public static int AgeOfRef(this DateTime dateBirth, DateTime dateRef)
         {
-            var today = dateRef.Date;
+            var today = dateRef.Date.ToUniversalTime();
             var age = today.Year - dateBirth.Year;
 
             if (dateBirth.Date > today.AddYears(-age)) age--;
@@ -61,7 +61,7 @@ namespace JffCsharpTools.Domain.Extensions
         {
             var returnDate = DateTime.UtcNow.Date;
             if (date > DateTime.MinValue)
-                returnDate = date.Date;
+                returnDate = date.Date.ToUniversalTime();
 
             if (returnDate.DayOfWeek == DayOfWeek.Saturday)
                 returnDate = returnDate.AddDays(2);
@@ -81,7 +81,7 @@ namespace JffCsharpTools.Domain.Extensions
         {
             var returnDate = DateTime.UtcNow.Date;
             if (date > DateTime.MinValue)
-                returnDate = date.Date;
+                returnDate = date.Date.ToUniversalTime();
 
             if (returnDate.DayOfWeek == DayOfWeek.Saturday)
                 returnDate = returnDate.AddDays(-1);

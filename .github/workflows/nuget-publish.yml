@@ -1,0 +1,93 @@
+name: Build and Publish NuGet Packages
+
+on:
+  push:
+    tags:
+      - "v*.*.*" # Dispara ao criar uma tag como v6.3.9, v8.3.9, etc.
+
+jobs:
+  publish:
+    name: Build and Push to NuGet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if tag is on main
+        id: check_main
+        run: |
+          git fetch origin main
+          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+            echo "on_main=true" >> $GITHUB_OUTPUT
+          else
+            echo "on_main=false" >> $GITHUB_OUTPUT
+            echo "Tag não está na branch main. Publish ignorado."
+          fi
+
+      - name: Setup .NET SDKs
+        if: steps.check_main.outputs.on_main == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            9.0.x
+
+      - name: Restore dependencies
+        if: steps.check_main.outputs.on_main == 'true'
+        run: dotnet restore
+
+      - name: Build (Release)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack jff-csharp-tools (netstandard2.1)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet pack jff-csharp-tools/jff-csharp-tools.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Pack jff-csharp-tools-6 (net6.0)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet pack jff-csharp-tools-6/jff-csharp-tools-6.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Pack jff-csharp-tools-8 (net8.0)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet pack jff-csharp-tools-8/jff-csharp-tools-8.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Pack jff-csharp-tools-9 (net9.0)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet pack jff-csharp-tools-9/jff-csharp-tools-9.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Pack jff-csharp-tools-lib-9 (net9.0)
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet pack jff-csharp-tools-lib-9/jff-csharp-tools-lib-9.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Publish packages to NuGet.org
+        if: steps.check_main.outputs.on_main == 'true'
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

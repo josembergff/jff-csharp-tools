@@ -4,10 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using JffCsharpTools.Apresentation.Exceptions;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Enums;
-using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -152,13 +151,13 @@ namespace JffCsharpTools6.Apresentation.Controllers
         /// <typeparam name="TRetorno">The type of data being returned in the response</typeparam>
         /// <param name="returnObj">The service response model containing result data and metadata</param>
         /// <returns>Appropriate ActionResult with correct HTTP status code and response body</returns>
-        protected ActionResult<TRetorno> ReturnAction<TRetorno>(DefaultResponseModel<TRetorno> returnObj)
+        protected ActionResult<TRetorno> ReturnAction<TRetorno>(Result<TRetorno> returnObj)
         {
             try
             {
                 if (returnObj != null && returnObj.Success)
                 {
-                    return Ok(returnObj.Result);
+                    return Ok(returnObj.Value);
                 }
                 else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -172,7 +171,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error! An internal server error has occurred, please contact your system administrator.");
-                var returnAction = new DefaultResponseModel<TRetorno>();
+                var returnAction = new Result<TRetorno>();
                 returnAction.Message = "Error! An internal server error has occurred, please contact your system administrator.";
                 returnAction.Error = ex.Message;
                 return Problem(returnAction.Error, statusCode: (int)HttpStatusCode.InternalServerError, title: returnAction.Message);

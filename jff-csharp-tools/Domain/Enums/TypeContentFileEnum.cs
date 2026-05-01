@@ -314,6 +314,11 @@ namespace JffCsharpTools.Domain.Enums
         /// Unknown or unrecognized file format
         /// </summary>
         [Description("unknown")]
-        UNKNOWN = 100
+        UNKNOWN = 100,
+        /// <summary>
+        /// Open Financial Exchange format
+        /// </summary>
+        [Description("application/x-ofx")]
+        OFX = 101
     }
 }

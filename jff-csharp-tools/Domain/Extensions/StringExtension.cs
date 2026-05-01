@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace JffCsharpTools.Domain.Extensions
@@ -223,6 +224,11 @@ namespace JffCsharpTools.Domain.Extensions
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Checks if a string is null, empty, or consists only of whitespace characters.
+        /// </summary>
+        /// <param name="cnpj">The CNPJ string to validate</param>
+        /// <returns>True if the CNPJ is valid, false otherwise</returns>
         public static bool IsValidAlphanumericCnpj(string cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj))
@@ -253,6 +259,28 @@ namespace JffCsharpTools.Domain.Extensions
             var dv2 = CalcularDv(clean.AsSpan(0, 13), pesos2);
 
             return clean[12] - '0' == dv1 && clean[13] - '0' == dv2;
+        }
+
+        /// <summary>
+        /// Deserializes a JSON string into an object of type T. Returns default(T) if deserialization fails or if the input string is null/empty.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to deserialize to</typeparam>
+        /// <param name="jsonString">The JSON string to deserialize</param>
+        /// <returns>An object of type T, or default(T) if deserialization fails</returns>
+        public static T JsonStringToObject<T>(this string jsonString)
+        {
+            if (string.IsNullOrEmpty(jsonString))
+                return default(T);
+
+            try
+            {
+                var obj = JsonSerializer.Deserialize<T>(jsonString);
+                return obj;
+            }
+            catch
+            {
+                return default(T);
+            }
         }
     }
 }

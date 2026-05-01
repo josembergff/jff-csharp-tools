@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace JffCsharpTools8.Domain.Interface.Repository
@@ -94,7 +94,7 @@ namespace JffCsharpTools8.Domain.Interface.Repository
         /// <param name="includes">Array of navigation property names to include in the query (eager loading)</param>
         /// <param name="asNoTracking">Whether to disable change tracking for better read performance (default: false)</param>
         /// <returns>Paginated result containing entities, total count, and pagination metadata</returns>
-        Task<PaginationModel<TEntity>> GetPaginated<TEntity>(PaginationModel<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
+        Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination support using a strongly-typed filter object.
@@ -105,7 +105,7 @@ namespace JffCsharpTools8.Domain.Interface.Repository
         /// <param name="includes">Array of navigation property names to include in the query (eager loading)</param>
         /// <param name="asNoTracking">Whether to disable change tracking for better read performance (default: false)</param>
         /// <returns>Paginated result containing entities, total count, and pagination metadata</returns>
-        Task<PaginationModel<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
+        Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new();
 
         /// <summary>
         /// Retrieves entities with pagination support filtered by user ownership.
@@ -116,7 +116,7 @@ namespace JffCsharpTools8.Domain.Interface.Repository
         /// <param name="includes">Array of navigation property names to include in the query (eager loading)</param>
         /// <param name="asNoTracking">Whether to disable change tracking for better read performance (default: false)</param>
         /// <returns>Paginated result containing user's entities, total count, and pagination metadata</returns>
-        Task<PaginationModel<TEntity>> GetPaginatedByUser<TEntity>(PaginationModel<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
+        Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new();
 
         /// <summary>
         /// Updates an existing entity identified by its primary key.

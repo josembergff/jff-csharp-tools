@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.11" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -11,14 +12,14 @@
     <Title>C# Tools</Title>
     <Authors>Josemberg Farias Ferreira</Authors>
     <email>josembergff@gmail.com</email>
-    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core</Description>
+    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Standard</Description>
     <PackageProjectUrl>https://www.nuget.org/packages/jff-csharp-tools</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/josembergff/jff-csharp-tools</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>2.3.8</Version>
+    <Version>3.0.0</Version>
     <PackageTags>tools;c#;custom;basic;dotnetcore</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

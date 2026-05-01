@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CsvHelper;
-using JffCsharpTools.Domain.Filters;
-using JffCsharpTools.Domain.Model;
+using JffCsharpTools.Domain.Common;
 
 namespace JffCsharpTools.Domain.Extensions
 {
@@ -73,12 +72,12 @@ namespace JffCsharpTools.Domain.Extensions
         /// Handles ordering, pagination, and total count calculation
         /// </summary>
         /// <typeparam name="T1">The type of items in the collection</typeparam>
-        /// <typeparam name="T2">The type of pagination model that inherits from PaginationModel</typeparam>
+        /// <typeparam name="T2">The type of pagination model that inherits from PaginationResult</typeparam>
         /// <param name="pagedResults">The collection of results to paginate</param>
         /// <param name="paginationModel">The pagination model containing pagination parameters</param>
         /// <param name="pendingPagination">Whether pagination should be applied (default: false)</param>
         /// <returns>A PaginationModel containing the paginated results and metadata</returns>
-        public static PaginationModel<T1> CreatePaginatedResponseResult<T1, T2>(this IEnumerable<T1> pagedResults, T2 paginationModel, bool pendingPagination = false) where T2 : PaginationModel<T1>
+        public static PaginationResult<T1> CreatePaginatedResponseResult<T1, T2>(this IEnumerable<T1> pagedResults, T2 paginationModel, bool pendingPagination = false) where T2 : PaginationResult<T1>
         {
             if (paginationModel != null)
             {

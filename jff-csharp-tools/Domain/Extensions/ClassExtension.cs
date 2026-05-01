@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 
 namespace JffCsharpTools.Domain.Extensions
 {
@@ -71,6 +72,19 @@ namespace JffCsharpTools.Domain.Extensions
                 expandoDict[propertyName] = propertyValue;
             else
                 expandoDict.Add(propertyName, propertyValue);
+        }
+
+        /// <summary>
+        /// Serializes an object to a JSON string using System.Text.Json
+        /// Provides a convenient way to convert objects to their JSON representation
+        /// </summary>
+        /// <typeparam name="T">The type of the object to serialize</typeparam>
+        /// <param name="obj">The object to serialize</param>
+        /// <returns>A JSON string representation of the object</returns>
+        public static string ToJsonString<T>(this T obj)
+        {
+            var jsonString = JsonSerializer.Serialize(obj);
+            return jsonString;
         }
     }
 }
