@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-namespace JffCsharpTools.Domain.Model
+using Jff.Csharp.Tools.Domain.Exceptions;
+
+namespace JffCsharpTools.Common
 {
     /// <summary>
     /// Generic default response model for application operations.
     /// Centralizes error, success, and return data information.
     /// </summary>
-    /// <typeparam name="T">Type of the result object to be returned</typeparam>
-    [Obsolete("Use Result or Result<T> from JffCsharpTools.Common instead for better consistency and functionality.")]
-    public class DefaultResponseModel<T>
+    public class Result
     {
         /// <summary>
         /// Main error message when the operation fails
@@ -40,17 +40,12 @@ namespace JffCsharpTools.Domain.Model
         /// <summary>
         /// List of additional messages (validations, warnings, etc.)
         /// </summary>
-        public List<string> MessageList { get; set; } = new List<string>();
+        public List<string> Messages { get; set; } = new List<string>();
 
         /// <summary>
         /// List of additional messages (validations, warnings, etc.)
         /// </summary>
-        public List<string> ErrorMessageList { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Result data of the operation
-        /// </summary>
-        public T Result { get; set; }
+        public List<string> Errors { get; set; } = new List<string>();
 
         /// <summary>
         /// Indicates whether the operation was executed successfully.
@@ -61,10 +56,41 @@ namespace JffCsharpTools.Domain.Model
             get
             {
                 var checkStatus = StatusCode == HttpStatusCode.OK || StatusCode == HttpStatusCode.NoContent;
-                var checkMessage = string.IsNullOrEmpty(Error) && ErrorMessageList?.Any() != true && string.IsNullOrEmpty(BaseException) && string.IsNullOrEmpty(StackTrace);
+                var checkMessage = string.IsNullOrEmpty(Error) && Errors?.Any() != true && string.IsNullOrEmpty(BaseException) && string.IsNullOrEmpty(StackTrace);
                 var checkResult = checkStatus && checkMessage;
                 return checkResult;
             }
+        }
+
+        public static Result Ok() => new Result();
+
+        public static Result Fail(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+            => new Result(error, message, statusCode);
+
+        public Result()
+        {
+        }
+
+        public Result(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        {
+            Error = error;
+            Message = message;
+            StatusCode = statusCode;
+        }
+
+        public Result(DomainException ex)
+        {
+            Error = ex.Message;
+            Errors = ex.Errors.ToList();
+            BaseException = ex.InnerException?.Message;
+            StackTrace = ex.StackTrace;
+        }
+
+        public Result(Exception ex)
+        {
+            Error = ex.Message;
+            BaseException = ex.InnerException?.Message;
+            StackTrace = ex.StackTrace;
         }
     }
 }
