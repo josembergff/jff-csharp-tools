@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -229,7 +228,7 @@ namespace JffCsharpTools.Domain.Extensions
         /// </summary>
         /// <param name="cnpj">The CNPJ string to validate</param>
         /// <returns>True if the CNPJ is valid, false otherwise</returns>
-        public static bool IsValidAlphanumericCnpj(string cnpj)
+        public static bool IsValidAlphanumericCnpj(this string cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj))
                 return false;
@@ -281,6 +280,42 @@ namespace JffCsharpTools.Domain.Extensions
             {
                 return default(T);
             }
+        }
+
+        /// <summary>
+        /// Normalizes a raw URL string by trimming whitespace, unescaping characters, and validating the URL format.
+        /// </summary>
+        /// <param name="rawUrl">The raw URL string to normalize</param>
+        /// <returns>A normalized URL string, or "#" if the URL is invalid</returns>
+        private static string NormalizeActionUrl(this string rawUrl)
+        {
+            if (string.IsNullOrWhiteSpace(rawUrl))
+            {
+                return "#";
+            }
+
+            var url = rawUrl.Trim()
+                .Replace("\\/", "/")
+                .Replace("\\\"", "\"")
+                .Replace("\\u0026", "&")
+                .Replace("&amp;", "&")
+                .Trim('"');
+
+            while (url.EndsWith("\\", StringComparison.Ordinal))
+            {
+                url = url[..^1];
+            }
+
+            url = url.Replace("%22", string.Empty, StringComparison.OrdinalIgnoreCase);
+            url = Uri.UnescapeDataString(url).Trim('"');
+
+            if (Uri.TryCreate(url, UriKind.Absolute, out var parsed) &&
+                (parsed.Scheme == Uri.UriSchemeHttp || parsed.Scheme == Uri.UriSchemeHttps))
+            {
+                return parsed.ToString();
+            }
+
+            return "#";
         }
     }
 }
