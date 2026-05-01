@@ -1,25 +1,23 @@
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
-using JffCsharpTools9.Application.Interfaces;
+using JffCsharpTools.Domain.Interfaces.Repositories;
+using JffCsharpTools.Application.Interfaces;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JffCsharpTools9.Application.Services
+namespace JffCsharpTools.Application.Services
 {
-    public class DefaultGuidService<T> : IDefaultGuidService<T> where T : DbContext
+    public class DefaultGuidService : IDefaultGuidService
     {
-        public IDefaultGuidRepository<T> defaultGuidRepository { get; set; }
+        public IDefaultGuidRepository defaultGuidRepository { get; set; }
 
-        public DefaultGuidService(IDefaultGuidRepository<T> defaultGuidRepository)
+        public DefaultGuidService(IDefaultGuidRepository defaultGuidRepository)
         {
             this.defaultGuidRepository = defaultGuidRepository;
         }

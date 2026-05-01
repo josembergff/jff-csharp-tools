@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using JffCsharpTools6.Application.Interfaces;
+using JffCsharpTools.Application.Interfaces;
 
 namespace JffCsharpTools6.Apresentation.Controllers
 {
@@ -15,11 +14,9 @@ namespace JffCsharpTools6.Apresentation.Controllers
     /// Inherits from DefaultController to leverage JWT token functionality
     /// </summary>
     /// <typeparam name="TService">The service type that implements IDefaultService interface</typeparam>
-    /// <typeparam name="TContext">The DbContext type used for database operations</typeparam>
     /// <typeparam name="TEntity">The entity type that inherits from DefaultEntity</typeparam>
-    public abstract class DefaultCRUDController<TService, TContext, TEntity> : DefaultController
-        where TService : IDefaultService<TContext>
-        where TContext : DbContext
+    public abstract class DefaultCRUDController<TService, TEntity> : DefaultController
+        where TService : IDefaultService
         where TEntity : DefaultEntity<TEntity>, new()
     {
         /// <summary>

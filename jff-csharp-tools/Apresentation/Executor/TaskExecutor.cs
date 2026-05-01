@@ -1,15 +1,18 @@
+using System;
 using System.Data.Common;
+using System.IO;
 using System.Net.Mail;
-using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
 using Jff.Csharp.Tools.Domain.Exceptions;
 using JffCsharpTools.Apresentation.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace JffCsharpTools9Lib.Apresentation.Executor
+namespace JffCsharpTools.Apresentation.Executor
 {
     /// <summary>
     /// Utility class for executing asynchronous tasks with comprehensive exception handling and logging.
-    /// Catches specific exceptions such as UnauthorizedAccessException, TokenException, DomainException, SmtpException, DbException, NullReferenceException, FileNotFoundException, IdentityNotMappedException, and general exceptions, logging them with appropriate severity levels.
+    /// Catches specific exceptions such as UnauthorizedAccessException, TokenException, DomainException, SmtpException, DbException, NullReferenceException, FileNotFoundException, and general exceptions, logging them with appropriate severity levels.
     /// </summary>
     public class TaskExecutor
     {
@@ -61,10 +64,6 @@ namespace JffCsharpTools9Lib.Apresentation.Executor
             {
                 _logger.LogError(ex, "File not found: {Message}", ex.Message);
             }
-            catch (IdentityNotMappedException ex)
-            {
-                _logger.LogError(ex, "Identity mapping error: {Message}", ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogCritical(ex, "General error occurred: {Message}", ex.Message);
@@ -111,10 +110,6 @@ namespace JffCsharpTools9Lib.Apresentation.Executor
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(ex, "File not found: {Message}", ex.Message);
-            }
-            catch (IdentityNotMappedException ex)
-            {
-                _logger.LogError(ex, "Identity mapping error: {Message}", ex.Message);
             }
             catch (Exception ex)
             {

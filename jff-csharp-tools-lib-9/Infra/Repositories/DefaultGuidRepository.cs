@@ -4,11 +4,11 @@ using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
 using Microsoft.EntityFrameworkCore;
-using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
+using JffCsharpTools.Domain.Interfaces.Repositories;
 
 namespace JffCsharpTools9Lib.Domain.Repository
 {
-    public class DefaultGuidRepository<T> : IDefaultGuidRepository<T> where T : DbContext
+    public class DefaultGuidRepository<T> where T : DbContext, IDefaultGuidRepository
     {
         private readonly T dbContext;
 
@@ -143,7 +143,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -178,7 +178,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[]? include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -212,7 +212,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="key">Valor da chave primária.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Entidade encontrada ou null.</returns>
-        public async Task<TEntity> GetByKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public async Task<TEntity?> GetByKey<TEntity, TKey>(TKey key, string[]? include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -240,7 +240,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter);
             if (includes != null && includes.Any())
@@ -279,7 +279,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter.Where());
             var pagedList = new PaginationResult<TEntity>(filter);
@@ -320,7 +320,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, Guid idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, Guid idUser, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(f => f.CreatorUserId == idUser);
             if (includes != null && includes.Any())
@@ -356,7 +356,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="filter">Expressão lambda para filtrar as entidades.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Primeira entidade encontrada ou null.</returns>
-        public async Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public async Task<TEntity?> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -380,7 +380,7 @@ namespace JffCsharpTools9Lib.Domain.Repository
         /// <param name="userId">Id do usuário criador.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(Guid userId, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(Guid userId, string[]? include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
             IQueryable<TEntity> query = dbContext.Set<TEntity>();

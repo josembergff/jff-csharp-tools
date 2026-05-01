@@ -4,17 +4,20 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using Microsoft.EntityFrameworkCore;
-using JffCsharpTools9Lib.Application.Interfaces;
-using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
+using JffCsharpTools.Application.Interfaces;
+using JffCsharpTools.Domain.Interfaces.Repositories;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace JffCsharpTools9Lib.Application.Services
+namespace JffCsharpTools.Application.Services
 {
-    public class DefaultService<T> : IDefaultService<T> where T : DbContext
+    public class DefaultService : IDefaultService
     {
-        public IDefaultRepository<T> defaultRepository { get; set; }
+        public IDefaultRepository defaultRepository { get; set; }
 
-        public DefaultService(IDefaultRepository<T> defaultRepository)
+        public DefaultService(IDefaultRepository defaultRepository)
         {
             this.defaultRepository = defaultRepository;
         }

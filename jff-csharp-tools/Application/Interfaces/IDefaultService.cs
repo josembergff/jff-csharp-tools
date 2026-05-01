@@ -3,22 +3,23 @@ using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
+using JffCsharpTools.Domain.Interfaces.Repositories;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
 
-namespace JffCsharpTools9Lib.Application.Interfaces
+namespace JffCsharpTools.Application.Interfaces
 {
     /// <summary>
     /// Default service interface providing CRUD operations for entities with user-based access control
     /// This interface defines the contract for services that handle database operations through a repository pattern
     /// </summary>
-    /// <typeparam name="T">The DbContext type that will be used for database operations</typeparam>
-    public interface IDefaultService<T> where T : DbContext
+    public interface IDefaultService
     {
         /// <summary>
         /// Gets or sets the default repository instance used for database operations
         /// </summary>
-        IDefaultRepository<T> defaultRepository { get; set; }
+        IDefaultRepository defaultRepository { get; set; }
 
         /// <summary>
         /// Creates a new entity in the database with user tracking
