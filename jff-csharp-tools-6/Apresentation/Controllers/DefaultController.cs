@@ -6,9 +6,7 @@ using System.Security.Claims;
 using JffCsharpTools.Apresentation.Exceptions;
 using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Enums;
-using JffCsharpTools.Domain.Common;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
