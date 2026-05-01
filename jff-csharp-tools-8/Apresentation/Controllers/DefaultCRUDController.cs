@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools8.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using JffCsharpTools8.Application.Interfaces;
 
 namespace JffCsharpTools8.Apresentation.Controllers
 {

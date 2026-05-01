@@ -9,11 +9,11 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
+using JffCsharpTools8.Domain.Interface.Repository;
 using Microsoft.EntityFrameworkCore;
-using JffCsharpTools6.Application.Interfaces;
-using JffCsharpTools6.Domain.Interface.Repository;
+using JffCsharpTools8.Application.Interfaces;
 
-namespace JffCsharpTools6.Application.Services
+namespace JffCsharpTools8.Application.Services
 {
     public class DefaultService<T> : IDefaultService<T> where T : DbContext
     {
