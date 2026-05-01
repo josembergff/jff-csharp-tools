@@ -3,18 +3,16 @@ using JffCsharpTools.Domain.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using JffCsharpTools.Application.DTOs;
-using JffCsharpTools9.Application.Interfaces;
+using JffCsharpTools.Application.Interfaces;
 
 public static class CrudGuidEndpoints
 {
-    public static RouteGroupBuilder MapGuidCrud<TEntity, TContext>(
+    public static RouteGroupBuilder MapGuidCrud<TEntity>(
         this RouteGroupBuilder group,
         string route,
-        IDefaultGuidService<TContext> service,
+        IDefaultGuidService service,
         CrudDto CrudDto = default)
-        where TContext : DbContext
         where TEntity : DefaultGuidEntity<TEntity>, new()
     {
         if (!CrudDto.ExcludeGetAll)

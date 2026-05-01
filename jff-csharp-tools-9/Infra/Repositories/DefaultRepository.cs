@@ -7,12 +7,12 @@ using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9.Domain.Interfaces.Repositories;
+using JffCsharpTools.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace JffCsharpTools9.Infra.Repositories
 {
-    public class DefaultRepository<T> : IDefaultRepository<T> where T : DbContext
+    public class DefaultRepository<T> where T : DbContext, IDefaultRepository
     {
         private readonly T dbContext;
 
