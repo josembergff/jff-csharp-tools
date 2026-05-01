@@ -6,7 +6,7 @@
     <Title>C# Tools 6</Title>
     <Authors>Josemberg Farias Ferreira</Authors>
     <email>josembergff@gmail.com</email>
-    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core version 6.0.36</Description>
+    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core with MVC version 6.0.36</Description>
     <PackageProjectUrl>https://www.nuget.org/packages/jff-csharp-tools-8</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/josembergff/jff-csharp-tools</RepositoryUrl>
