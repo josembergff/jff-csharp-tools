@@ -62,8 +62,20 @@ namespace JffCsharpTools.Common
             }
         }
 
+        /// <summary>
+        /// Factory method to create a successful result with default values.
+        /// Sets StatusCode to OK and leaves other properties empty.
+        /// </summary>
+        /// <returns>A successful result with default values</returns>
         public static Result Ok() => new Result();
 
+        /// <summary>
+        /// Factory method to create a failed result with a specified error message, optional detailed message, and HTTP status code (default: BadRequest).
+        /// </summary>
+        /// <param name="error">The main error message</param>
+        /// <param name="message">Optional detailed message</param>
+        /// <param name="statusCode">HTTP status code (default: BadRequest)</param>
+        /// <returns>A failed result with the specified error information</returns>
         public static Result Fail(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new Result(error, message, statusCode);
 
@@ -71,6 +83,12 @@ namespace JffCsharpTools.Common
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Result class with a specified error message, optional detailed message, and HTTP status code (default: BadRequest).
+        /// </summary>
+        /// <param name="error">The main error message</param>
+        /// <param name="message">Optional detailed message</param>
+        /// <param name="statusCode">HTTP status code (default: BadRequest)</param>
         public Result(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
         {
             Error = error;
@@ -78,6 +96,10 @@ namespace JffCsharpTools.Common
             StatusCode = statusCode;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Result class based on a DomainException, extracting error details, base exception, and stack trace for comprehensive error reporting.
+        /// </summary>
+        /// <param name="ex">The DomainException instance</param>
         public Result(DomainException ex)
         {
             Error = ex.Message;
@@ -86,6 +108,10 @@ namespace JffCsharpTools.Common
             StackTrace = ex.StackTrace;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Result class based on a general Exception, extracting the main error message, base exception, and stack trace for comprehensive error reporting.
+        /// </summary>
+        /// <param name="ex">The Exception instance</param>
         public Result(Exception ex)
         {
             Error = ex.Message;

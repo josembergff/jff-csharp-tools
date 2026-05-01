@@ -1,9 +1,6 @@
-using System;
 using System.Data.Common;
-using System.IO;
 using System.Net.Mail;
 using System.Security.Principal;
-using System.Threading.Tasks;
 using Jff.Csharp.Tools.Domain.Exceptions;
 using JffCsharpTools.Apresentation.Exceptions;
 using Microsoft.Extensions.Logging;

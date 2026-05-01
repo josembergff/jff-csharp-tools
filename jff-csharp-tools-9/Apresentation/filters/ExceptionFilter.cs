@@ -1,6 +1,6 @@
 using JffCsharpTools.Apresentation.Exceptions;
+using JffCsharpTools.Common;
 using JffCsharpTools.Domain.Constants;
-using JffCsharpTools.Domain.Model;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,7 +40,7 @@ namespace JffCsharpTools9.Apresentation.Filters
         /// <param name="context">The exception context containing details about the exception and request</param>
         public override void OnException(ExceptionContext context)
         {
-            var returnObj = new DefaultResponseModel<object>();
+            var returnObj = new Result<object>();
 #if DEBUG
             returnObj.Error = context.Exception.Message;
             returnObj.BaseException = context.Exception.GetBaseException().Message;
