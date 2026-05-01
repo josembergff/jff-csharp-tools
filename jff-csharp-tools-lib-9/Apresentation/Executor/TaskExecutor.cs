@@ -5,7 +5,7 @@ using Jff.Csharp.Tools.Domain.Exceptions;
 using JffCsharpTools.Apresentation.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace JffCsharpTools.Apresentation.Executor
+namespace JffCsharpTools9Lib.Apresentation.Executor
 {
     /// <summary>
     /// Utility class for executing asynchronous tasks with comprehensive exception handling and logging.

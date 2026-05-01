@@ -1,22 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Extensions;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using JffCsharpTools9Lib.Domain.Interfaces.Repositories;
 
-namespace JffCsharpTools9.Infra.Repositories
+namespace JffCsharpTools9Lib.Domain.Repository
 {
-    public class DefaultRepository<T> : IDefaultRepository<T> where T : DbContext
+    public class DefaultGuidRepository<T> : IDefaultGuidRepository<T> where T : DbContext
     {
         private readonly T dbContext;
 
-        public DefaultRepository(T dbContext)
+        public DefaultGuidRepository(T dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -39,7 +35,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// Note: This method assumes that the entity has a property named Id of type int or long.
         /// If the entity does not have an Id property, you may need to modify the method accordingly.
         /// 
-        /// This method is generic and can be used with any entity type that inherits from DefaultEntity<TEntity>.
+        /// This method is generic and can be used with any entity type that inherits from DefaultGuidEntity<TEntity>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TKey"></typeparam>
@@ -47,7 +43,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="key"></param>
         /// <param name="saveChanges"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateByKey<TEntity, TKey>(TEntity entity, TKey key, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> UpdateByKey<TEntity, TKey>(TEntity entity, TKey key, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             var existingEntity = await dbContext.Set<TEntity>().FindAsync(key);
             if (existingEntity != null)
@@ -77,7 +73,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="entityList">List of entities to update.</param>
         /// <param name="forceDetach">If true, detaches entities before updating.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
-        public virtual async Task UpdateBatch<TEntity>(IEnumerable<TEntity> entityList, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task UpdateBatch<TEntity>(IEnumerable<TEntity> entityList, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             if (forceDetach)
             {
@@ -104,7 +100,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="entity">Entidade a ser criada.</param>
         /// <param name="saveChanges">Se true, salva as alterações no banco de dados.</param>
         /// <returns>Entidade criada.</returns>
-        public async Task<TEntity> Create<TEntity>(TEntity entity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity> Create<TEntity>(TEntity entity, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             await dbContext.Set<TEntity>().AddAsync(entity);
             if (saveChanges)
@@ -125,7 +121,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="entities">Collection of entities to create.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
         /// <returns>List of created entities.</returns>
-        public virtual async Task<IEnumerable<TEntity>> CreateBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<IEnumerable<TEntity>> CreateBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             await dbContext.Set<TEntity>().AddRangeAsync(entities);
             if (saveChanges)
@@ -147,7 +143,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -182,7 +178,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -216,7 +212,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="key">Valor da chave primária.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Entidade encontrada ou null.</returns>
-        public async Task<TEntity> GetByKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity> GetByKey<TEntity, TKey>(TKey key, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -244,7 +240,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter);
             if (includes != null && includes.Any())
@@ -283,7 +279,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter.Where());
             var pagedList = new PaginationResult<TEntity>(filter);
@@ -324,7 +320,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, int idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, Guid idUser, string[] includes = null, bool asNoTracking = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(f => f.CreatorUserId == idUser);
             if (includes != null && includes.Any())
@@ -360,7 +356,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="filter">Expressão lambda para filtrar as entidades.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Primeira entidade encontrada ou null.</returns>
-        public async Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -384,7 +380,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="userId">Id do usuário criador.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(int userId, string[] include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(Guid userId, string[] include = null) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
@@ -409,7 +405,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="filter">Expressão lambda para filtrar as entidades a serem removidas.</param>
         /// <param name="saveChanges">Se true, salva as alterações no banco de dados.</param>
         /// <returns>True se a operação foi realizada.</returns>
-        public async Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             var baseList = await dbContext.Set<TEntity>().Where(filter).ToListAsync();
             if (baseList?.Any() == true)
@@ -433,7 +429,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <param name="entityList">List of entities to delete.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
-        public virtual async Task DeleteBatch<TEntity>(IEnumerable<TEntity> entityList, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task DeleteBatch<TEntity>(IEnumerable<TEntity> entityList, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             dbContext.RemoveRange(entityList);
             if (saveChanges)
@@ -454,7 +450,7 @@ namespace JffCsharpTools9.Infra.Repositories
         /// <param name="key">Primary key value.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
         /// <returns>True if the operation was performed.</returns>
-        public async Task<bool> DeleteByKey<TEntity, TKey>(TKey key, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> DeleteByKey<TEntity, TKey>(TKey key, bool saveChanges = false) where TEntity : DefaultGuidEntity<TEntity>, new()
         {
             var baseObj = await dbContext.Set<TEntity>().FindAsync(key);
             if (baseObj != null)

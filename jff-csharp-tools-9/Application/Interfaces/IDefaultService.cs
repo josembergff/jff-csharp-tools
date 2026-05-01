@@ -6,7 +6,7 @@ using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools9.Domain.Interface.Repository;
+using JffCsharpTools9.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace JffCsharpTools9.Application.Interfaces
