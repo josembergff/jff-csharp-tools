@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools6.Domain.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using JffCsharpTools6.Application.Interfaces;
 
 namespace JffCsharpTools6.Apresentation.Controllers
 {
