@@ -35,17 +35,18 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// Note: This method assumes that the entity has a property named Id of type int or long.
         /// If the entity does not have an Id property, you may need to modify the method accordingly.
         /// 
-        /// This method is generic and can be used with any entity type that inherits from DefaultEntity<TEntity>.
+        /// This method is generic and can be used with any entity type that inherits from DefaultBasicEntity.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="entity"></param>
         /// <param name="key"></param>
         /// <param name="saveChanges"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateByKey<TEntity, TKey>(TEntity entity, TKey key, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> UpdateByKey<TEntity, TKey>(TEntity entity, TKey key, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
-            var existingEntity = await dbContext.Set<TEntity>().FindAsync(key);
+            var existingEntity = await dbContext.Set<TEntity>().FindAsync(new object?[] { key }, cancellationToken);
             if (existingEntity != null)
             {
                 dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
@@ -56,7 +57,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
             }
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
             return entity.Id > 0;
         }
@@ -73,7 +74,8 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="entityList">List of entities to update.</param>
         /// <param name="forceDetach">If true, detaches entities before updating.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
-        public virtual async Task UpdateBatch<TEntity>(IEnumerable<TEntity> entityList, bool forceDetach = false, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public virtual async Task UpdateBatch<TEntity>(IEnumerable<TEntity> entityList, bool forceDetach = false, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             if (forceDetach)
             {
@@ -85,7 +87,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
             dbContext.UpdateRange(entityList);
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -99,13 +101,14 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <typeparam name="TEntity">Tipo da entidade.</typeparam>
         /// <param name="entity">Entidade a ser criada.</param>
         /// <param name="saveChanges">Se true, salva as alterações no banco de dados.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Entidade criada.</returns>
-        public async Task<TEntity> Create<TEntity>(TEntity entity, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity> Create<TEntity>(TEntity entity, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
-            await dbContext.Set<TEntity>().AddAsync(entity);
+            await dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
             return entity;
         }
@@ -121,12 +124,12 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="entities">Collection of entities to create.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
         /// <returns>List of created entities.</returns>
-        public virtual async Task<IEnumerable<TEntity>> CreateBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<IEnumerable<TEntity>> CreateBatch<TEntity>(IEnumerable<TEntity> entities, bool saveChanges, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
-            await dbContext.Set<TEntity>().AddRangeAsync(entities);
+            await dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken);
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
             return entities;
         }
@@ -143,7 +146,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null, bool asNoTracking = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -155,11 +158,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
 
             if (asNoTracking == true)
             {
-                list = await query.Where(filter).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync();
+                list = await query.Where(filter).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync(cancellationToken);
             }
             else
             {
-                list = await query.Where(filter).OrderByDescending(o => o.CreatedAt).ToListAsync();
+                list = await query.Where(filter).OrderByDescending(o => o.CreatedAt).ToListAsync(cancellationToken);
             }
 
             return list;
@@ -178,7 +181,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[]? include = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByFilter<TEntity, TFilter>(TFilter filter, string[]? include = null, bool asNoTracking = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             List<TEntity> list = new List<TEntity>();
 
@@ -190,11 +193,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
 
             if (asNoTracking == true)
             {
-                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync();
+                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).AsNoTracking().ToListAsync(cancellationToken);
             }
             else
             {
-                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).ToListAsync();
+                list = await query.Where(filter.Where()).OrderByDescending(o => o.CreatedAt).ToListAsync(cancellationToken);
             }
 
             return list;
@@ -212,7 +215,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="key">Valor da chave primária.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Entidade encontrada ou null.</returns>
-        public async Task<TEntity?> GetByKey<TEntity, TKey>(TKey key, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity?> GetByKey<TEntity, TKey>(TKey key, string[]? include = null, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -222,7 +225,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
 
             var list = (DbSet<TEntity>)query;
 
-            var current = await list.FindAsync(key);
+            var current = await list.FindAsync(new object?[] { key }, cancellationToken);
 
             return current;
         }
@@ -240,7 +243,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginated<TEntity>(PaginationResult<TEntity> pagination, Expression<Func<TEntity, bool>> filter, string[]? includes = null, bool asNoTracking = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter);
             if (includes != null && includes.Any())
@@ -257,11 +260,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
                         .Take(pagination.CountPerPage);
             }
 
-            pagination.Total = await query.CountAsync();
+            pagination.Total = await query.CountAsync(cancellationToken);
             if (asNoTracking)
-                pagination.List = await items.AsNoTracking().ToListAsync();
+                pagination.List = await items.AsNoTracking().ToListAsync(cancellationToken);
             else
-                pagination.List = await items.ToListAsync();
+                pagination.List = await items.ToListAsync(cancellationToken);
 
             return pagination;
         }
@@ -279,7 +282,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new() where TFilter : DefaultFilter<TEntity>, new()
+        public virtual async Task<PaginationResult<TEntity>> GetPaginatedByFilter<TEntity, TFilter>(TFilter filter, string[]? includes = null, bool asNoTracking = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new() where TFilter : DefaultFilter<TEntity>, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(filter.Where());
             var pagedList = new PaginationResult<TEntity>(filter);
@@ -298,11 +301,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
                         .Take(filter.Count);
             }
 
-            pagedList.Total = await query.CountAsync();
+            pagedList.Total = await query.CountAsync(cancellationToken);
             if (asNoTracking)
-                pagedList.List = await items.AsNoTracking().ToListAsync();
+                pagedList.List = await items.AsNoTracking().ToListAsync(cancellationToken);
             else
-                pagedList.List = await items.ToListAsync();
+                pagedList.List = await items.ToListAsync(cancellationToken);
 
             return pagedList;
         }
@@ -320,7 +323,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="includes">Propriedades de navegação a serem incluídas.</param>
         /// <param name="asNoTracking">Se true, consulta sem rastreamento.</param>
         /// <returns>Modelo de paginação preenchido.</returns>
-        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, int idUser, string[]? includes = null, bool asNoTracking = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<PaginationResult<TEntity>> GetPaginatedByUser<TEntity>(PaginationResult<TEntity> pagination, int idUser, string[]? includes = null, bool asNoTracking = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>().Where(f => f.CreatorUserId == idUser);
             if (includes != null && includes.Any())
@@ -336,11 +339,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
                         .Take(pagination.CountPerPage);
             }
 
-            pagination.Total = await query.CountAsync();
+            pagination.Total = await query.CountAsync(cancellationToken);
             if (asNoTracking)
-                pagination.List = await items.AsNoTracking().ToListAsync();
+                pagination.List = await items.AsNoTracking().ToListAsync(cancellationToken);
             else
-                pagination.List = await items.ToListAsync();
+                pagination.List = await items.ToListAsync(cancellationToken);
 
             return pagination;
         }
@@ -356,7 +359,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="filter">Expressão lambda para filtrar as entidades.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Primeira entidade encontrada ou null.</returns>
-        public async Task<TEntity?> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<TEntity?> GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter, string[]? include = null, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
 
@@ -364,7 +367,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
                 foreach (string includeLine in include)
                     query = query.Include(includeLine);
 
-            var current = await query.FirstOrDefaultAsync(filter);
+            var current = await query.FirstOrDefaultAsync(filter, cancellationToken);
 
             return current;
         }
@@ -380,7 +383,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="userId">Id do usuário criador.</param>
         /// <param name="include">Propriedades de navegação a serem incluídas.</param>
         /// <returns>Lista de entidades encontradas.</returns>
-        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(int userId, string[]? include = null) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<IEnumerable<TEntity>> GetByUser<TEntity>(int userId, string[]? include = null, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             List<TEntity> list = new List<TEntity>();
             IQueryable<TEntity> query = dbContext.Set<TEntity>();
@@ -389,7 +392,7 @@ namespace JffCsharpTools9Lib.Infra.Repositories
                 foreach (string includeLine in include)
                     query = query.Include(includeLine);
 
-            list = await query.Where(f => f.CreatorUserId == userId).OrderByDescending(o => o.CreatedAt).ToListAsync();
+            list = await query.Where(f => f.CreatorUserId == userId).OrderByDescending(o => o.CreatedAt).ToListAsync(cancellationToken);
 
             return list;
         }
@@ -405,15 +408,15 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="filter">Expressão lambda para filtrar as entidades a serem removidas.</param>
         /// <param name="saveChanges">Se true, salva as alterações no banco de dados.</param>
         /// <returns>True se a operação foi realizada.</returns>
-        public async Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> Delete<TEntity>(Expression<Func<TEntity, bool>> filter, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
-            var baseList = await dbContext.Set<TEntity>().Where(filter).ToListAsync();
+            var baseList = await dbContext.Set<TEntity>().Where(filter).ToListAsync(cancellationToken);
             if (baseList?.Any() == true)
             {
                 dbContext.RemoveRange(baseList);
                 if (saveChanges)
                 {
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync(cancellationToken);
                 }
             }
             return true;
@@ -429,12 +432,12 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <param name="entityList">List of entities to delete.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
-        public virtual async Task DeleteBatch<TEntity>(IEnumerable<TEntity> entityList, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public virtual async Task DeleteBatch<TEntity>(IEnumerable<TEntity> entityList, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
             dbContext.RemoveRange(entityList);
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -450,16 +453,16 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// <param name="key">Primary key value.</param>
         /// <param name="saveChanges">If true, saves changes to the database.</param>
         /// <returns>True if the operation was performed.</returns>
-        public async Task<bool> DeleteByKey<TEntity, TKey>(TKey key, bool saveChanges = false) where TEntity : DefaultEntity<TEntity>, new()
+        public async Task<bool> DeleteByKey<TEntity, TKey>(TKey key, bool saveChanges = false, CancellationToken cancellationToken = default) where TEntity : DefaultBasicEntity, new()
         {
-            var baseObj = await dbContext.Set<TEntity>().FindAsync(key);
+            var baseObj = await dbContext.Set<TEntity>().FindAsync(new object?[] { key }, cancellationToken);
             if (baseObj != null)
             {
                 dbContext.Set<TEntity>().Remove(baseObj);
             }
             if (saveChanges)
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
             return true;
         }
@@ -485,9 +488,9 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// Exemplo de uso:
         /// await repository.SaveChangesAsync();
         /// </summary>
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -496,11 +499,11 @@ namespace JffCsharpTools9Lib.Infra.Repositories
         /// Exemplo de uso:
         /// await repository.Rollback();
         /// </summary>
-        public async Task Rollback()
+        public async Task Rollback(CancellationToken cancellationToken = default)
         {
             if (dbContext.Database.CurrentTransaction != null)
             {
-                await dbContext.Database.RollbackTransactionAsync();
+                await dbContext.Database.RollbackTransactionAsync(cancellationToken);
             }
             dbContext.ChangeTracker.Clear();
         }
