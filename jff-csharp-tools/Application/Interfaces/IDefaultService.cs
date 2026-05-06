@@ -3,7 +3,6 @@ using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Entity;
 using JffCsharpTools.Domain.Filters;
 using JffCsharpTools.Domain.Common;
-using JffCsharpTools.Domain.Interfaces.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
@@ -16,11 +15,6 @@ namespace JffCsharpTools.Application.Interfaces
     /// </summary>
     public interface IDefaultService
     {
-        /// <summary>
-        /// Gets or sets the default repository instance used for database operations
-        /// </summary>
-        IDefaultRepository defaultRepository { get; set; }
-
         /// <summary>
         /// Creates a new entity in the database with user tracking
         /// </summary>
