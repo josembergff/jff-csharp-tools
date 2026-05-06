@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using Jff.Csharp.Tools.Domain.Exceptions;
+using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Common
@@ -11,7 +14,7 @@ namespace JffCsharpTools.Domain.Common
     /// Provides pagination controls, result data, and operation status information.
     /// </summary>
     /// <typeparam name="TEntity">Type of the entity being paginated</typeparam>
-    public class PaginationResult<TEntity>
+    public class PaginationResult<TEntity> : Result
     {
         /// <summary>
         /// Default constructor that initializes CountPerPage to 10 and Page to 1
@@ -30,6 +33,57 @@ namespace JffCsharpTools.Domain.Common
         {
             CountPerPage = filter.Count;
             Page = filter.Page;
+        }
+
+
+        public PaginationResult(int page, int countPerPage)
+        {
+            CountPerPage = countPerPage;
+            Page = page;
+        }
+
+        /// <summary>
+        /// Constructor that initializes pagination settings with ordering information
+        /// </summary>
+        /// <param name="page">Current page number (1-based indexing)</param>
+        /// <param name="countPerPage">Number of items to display per page</param>
+        /// <param name="order">Name of the property to order results by</param>
+        /// <param name="orderDescending">Indicates whether to order results in descending order (true) or ascending order (false)</param>
+        public PaginationResult(int page, int countPerPage, string order, bool orderDescending)
+        {
+            CountPerPage = countPerPage;
+            Page = page;
+            Order = order;
+            OrderDescending = orderDescending;
+        }
+
+        /// <summary>
+        /// Constructor that initializes the pagination result with domain exception information
+        /// </summary>
+        /// <param name="domainException">Domain exception that caused the pagination result to fail</param>
+        public PaginationResult(DomainException domainException) : base(domainException)
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor that initializes the pagination result with exception information
+        /// </summary>
+        /// <param name="exception">Exception that caused the pagination result to fail</param>
+        public PaginationResult(Exception exception) : base(exception)
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor that initializes the pagination result with error information
+        /// </summary>
+        /// <param name="error">Error code or identifier</param>
+        /// <param name="errorMessage">Detailed error message</param>
+        /// <param name="statusCode">HTTP status code associated with the error</param>
+        public PaginationResult(string error, string errorMessage, HttpStatusCode statusCode = HttpStatusCode.BadRequest) : base(error, errorMessage, statusCode)
+        {
+
         }
 
         /// <summary>
@@ -71,32 +125,6 @@ namespace JffCsharpTools.Domain.Common
         /// Flag to disable pagination and return all results
         /// </summary>
         public bool IgnorePagination { get; set; } = false;
-
-        /// <summary>
-        /// Indicates whether the pagination operation was successful.
-        /// Returns true if internal success flag is true and there are no errors in ErrorList.
-        /// </summary>
-        public bool Success
-        {
-            get
-            {
-                return _success && (ErrorList == null || !ErrorList.Any());
-            }
-            set
-            {
-                _success = value;
-            }
-        }
-
-        /// <summary>
-        /// Collection of error messages encountered during the pagination operation
-        /// </summary>
-        public ICollection<string> ErrorList { get; set; }
-
-        /// <summary>
-        /// Collection of success messages from the pagination operation
-        /// </summary>
-        public ICollection<string> SuccessList { get; set; }
 
         /// <summary>
         /// Calculates the number of items to skip based on current page and items per page.

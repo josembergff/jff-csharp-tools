@@ -1,10 +1,11 @@
 using System.Net;
 using JffCsharpTools.Application.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 public static class DefaultResponseModelExtension
 {
-    public static ActionResult<T> ReturnResult<T>(this Result<T> returnObj)
+    public static ActionResult<T> ReturnActionResult<T>(this Result<T> returnObj)
     {
         if (returnObj != null && returnObj.Success)
         {
@@ -17,6 +18,22 @@ public static class DefaultResponseModelExtension
         else
         {
             return new BadRequestObjectResult(returnObj);
+        }
+    }
+
+    public static IResult ReturnResult<T>(this Result<T> returnObj)
+    {
+        if (returnObj != null && returnObj.Success)
+        {
+            return Results.Ok(returnObj.Value);
+        }
+        else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return Results.Unauthorized();
+        }
+        else
+        {
+            return Results.BadRequest(returnObj);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace JffCsharpTools.Application.Common
             get
             {
                 var checkStatus = StatusCode == HttpStatusCode.OK || StatusCode == HttpStatusCode.NoContent;
-                var checkMessage = string.IsNullOrEmpty(Error) || Errors?.Any() != true || string.IsNullOrEmpty(BaseException) || string.IsNullOrEmpty(StackTrace);
+                var checkMessage = string.IsNullOrEmpty(Error) && (Errors?.Any() != true) && string.IsNullOrEmpty(BaseException) && string.IsNullOrEmpty(StackTrace);
                 var checkResult = checkStatus && checkMessage;
                 return checkResult;
             }
