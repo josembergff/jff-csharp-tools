@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace JffCsharpTools.Application.Services
 {
-    public class DefaultService : IDefaultService
+    public class DefaultService<T> : IDefaultService where T : IDefaultRepository
     {
-        public IDefaultRepository defaultRepository { get; set; }
+        public T defaultRepository { get; set; }
 
-        public DefaultService(IDefaultRepository defaultRepository)
+        public DefaultService(T defaultRepository)
         {
             this.defaultRepository = defaultRepository;
         }

@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace JffCsharpTools.Application.Services
 {
-    public class DefaultGuidService : IDefaultGuidService
+    public class DefaultGuidService<T> : IDefaultGuidService where T : IDefaultGuidRepository
     {
-        public IDefaultGuidRepository defaultGuidRepository { get; set; }
+        public T defaultGuidRepository { get; set; }
 
-        public DefaultGuidService(IDefaultGuidRepository defaultGuidRepository)
+        public DefaultGuidService(T defaultGuidRepository)
         {
             this.defaultGuidRepository = defaultGuidRepository;
         }
