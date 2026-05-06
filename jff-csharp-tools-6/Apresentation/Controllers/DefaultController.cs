@@ -155,18 +155,7 @@ namespace JffCsharpTools6.Apresentation.Controllers
         {
             try
             {
-                if (returnObj != null && returnObj.Success)
-                {
-                    return Ok(returnObj.Value);
-                }
-                else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    return Unauthorized(returnObj);
-                }
-                else
-                {
-                    return BadRequest(returnObj);
-                }
+                return returnObj.ReturnActionResult();
             }
             catch (Exception ex)
             {

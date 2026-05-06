@@ -98,17 +98,17 @@ namespace JffCsharpTools9.Apresentation.Controllers
         /// <returns>Formatted ActionResult with appropriate HTTP status code</returns>
         protected ActionResult<TRetorno> ReturnAction<TRetorno>(Result<TRetorno> returnObj)
         {
-            if (returnObj != null && returnObj.Success)
+            try
             {
-                return Ok(returnObj.Value);
+                return returnObj.ReturnActionResult();
             }
-            else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
+            catch (Exception ex)
             {
-                return Unauthorized(returnObj);
-            }
-            else
-            {
-                return BadRequest(returnObj);
+                logger.LogError(ex, "Error! An internal server error has occurred, please contact your system administrator.");
+                var returnAction = new Result<TRetorno>();
+                returnAction.Message = "Error! An internal server error has occurred, please contact your system administrator.";
+                returnAction.Error = ex.Message;
+                return Problem(returnAction.Error, statusCode: (int)HttpStatusCode.InternalServerError, title: returnAction.Message);
             }
         }
 
