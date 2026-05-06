@@ -87,11 +87,6 @@ namespace JffCsharpTools.Domain.Common
         }
 
         /// <summary>
-        /// Private field to store the success state internally
-        /// </summary>
-        private bool _success = true;
-
-        /// <summary>
         /// Current page number (1-based indexing)
         /// </summary>
         public int Page { get; set; }
