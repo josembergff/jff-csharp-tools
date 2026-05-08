@@ -1,6 +1,6 @@
 using System;
 
-namespace JFF.Domain.Entity
+namespace JffCsharpTools.Domain.Entity
 {
     public class LogSerilogPgsqlEntity
     {
