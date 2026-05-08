@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace JffCsharpTools8.Apresentacao.Filters
+namespace JffCsharpTools8.Apresentation.Filters
 {
     /// <summary>
     /// Action filter that provides role-based authorization using JWT tokens and enum-based role definitions.
