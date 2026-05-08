@@ -1,22 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <RootNamespace>jff_csharp_tools_lib_9</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net10.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>C# Tools Lib 9</Title>
+    <Title>C# Tools 10</Title>
     <Authors>Josemberg Farias Ferreira</Authors>
     <email>josembergff@gmail.com</email>
-    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core without MVC version 9.0.0</Description>
-    <PackageProjectUrl>https://www.nuget.org/packages/jff_csharp_tools_lib_9</PackageProjectUrl>
+    <Description>An open-source project offering a suite of utilities to enhance C# development for .NET Core with MVC version 10.0.0</Description>
+    <PackageProjectUrl>https://www.nuget.org/packages/jff-csharp-tools-10</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/josembergff/jff-csharp-tools</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>9.0.0.0</AssemblyVersion>
-    <FileVersion>9.0.0.0</FileVersion>
-    <Version>3.2.3</Version>
+    <AssemblyVersion>10.0.0.0</AssemblyVersion>
+    <FileVersion>10.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
     <PackageTags>tools;c#;custom;basic;dotnetcore</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -38,9 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.15" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.15" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
   </ItemGroup>
 
 </Project>
