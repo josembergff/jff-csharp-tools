@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using JffCsharpTools.Application.DTOs;
 using JffCsharpTools.Application.Interfaces;
+using JffCsharpTools10.Apresentation.Extensions;
+
+namespace JffCsharpTools10.Apresentation.Endpoints;
 
 public static class CrudGuidEndpoints
 {

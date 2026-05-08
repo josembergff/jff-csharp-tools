@@ -5,8 +5,9 @@ using JffCsharpTools.Application.Common;
 using JffCsharpTools.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using JffCsharpTools10.Apresentation.Extensions;
 
-namespace JffCsharpTools9.Apresentation.Controllers
+namespace JffCsharpTools10.Apresentation.Controllers
 {
     /// <summary>
     /// Base controller class that provides common functionality for token handling, user identification, 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using JffCsharpTools.Application.Interfaces;
 
-namespace JffCsharpTools9.Apresentation.Controllers
+namespace JffCsharpTools10.Apresentation.Controllers
 {
     /// <summary>
     /// Abstract base controller providing standard CRUD operations for entities

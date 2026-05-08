@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JffCsharpTools9.Apresentation.Attributes
+namespace JffCsharpTools10.Apresentation.Attributes
 {
     /// <summary>
     /// Custom attribute for method-level authorization based on enum roles.

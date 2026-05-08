@@ -3,7 +3,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JffCsharpTools6.Apresentation.Configs
+namespace JffCsharpTools10.Apresentation.Configs
 {
     /// <summary>
     /// Generic JSON converter for enums that handles string-to-enum and enum-to-string conversion

@@ -3,6 +3,8 @@ using JffCsharpTools.Application.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+namespace JffCsharpTools10.Apresentation.Extensions;
+
 public static class DefaultResponseModelExtension
 {
     public static ActionResult<T> ReturnActionResult<T>(this Result<T> returnObj)
