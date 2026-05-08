@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace SINARC.Core.CrossCutting.Config.Extensions
+namespace JffCsharpTools6.Apresentation.Extensions
 {
     /// <summary>
     /// Extension for IHttpContextAccessor to retrieve the Bearer token from the Authorization header of the HTTP context.

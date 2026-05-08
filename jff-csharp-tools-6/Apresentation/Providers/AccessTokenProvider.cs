@@ -1,19 +1,20 @@
+using JffCsharpTools6.Apresentation.Extensions;
 using Microsoft.AspNetCore.Http;
-using SINARC.Core.CrossCutting.Config.Extensions;
 
-namespace JffCsharpTools6.Apresentation.Providers;
-
-public class AccessTokenProvider : IAccessTokenProvider
+namespace JffCsharpTools6.Apresentation.Providers
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public AccessTokenProvider(IHttpContextAccessor httpContextAccessor)
+    public class AccessTokenProvider : IAccessTokenProvider
     {
-        _httpContextAccessor = httpContextAccessor;
-    }
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public string GetToken()
-    {
-        return _httpContextAccessor.GetBearerToken();
+        public AccessTokenProvider(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public string GetToken()
+        {
+            return _httpContextAccessor.GetBearerToken();
+        }
     }
 }

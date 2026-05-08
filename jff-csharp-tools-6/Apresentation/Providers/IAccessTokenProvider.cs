@@ -1,6 +1,7 @@
-namespace JffCsharpTools6.Apresentation.Providers;
-
-public interface IAccessTokenProvider
+namespace JffCsharpTools6.Apresentation.Providers
 {
-    string GetToken();
+    public interface IAccessTokenProvider
+    {
+        string GetToken();
+    }
 }

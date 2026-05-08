@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Jff.Csharp.Tools.Domain.Exceptions;
 using JffCsharpTools.Application.Common;
+using JffCsharpTools.Domain.Exceptions;
 using JffCsharpTools.Domain.Filters;
 
 namespace JffCsharpTools.Domain.Common

@@ -3,37 +3,40 @@ using JffCsharpTools.Application.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-public static class DefaultResponseModelExtension
+namespace JffCsharpTools6.Apresentation.Extensions
 {
-    public static ActionResult<T> ReturnActionResult<T>(this Result<T> returnObj)
+    public static class DefaultResponseModelExtension
     {
-        if (returnObj != null && returnObj.Success)
+        public static ActionResult<T> ReturnActionResult<T>(this Result<T> returnObj)
         {
-            return new OkObjectResult(returnObj.Value);
+            if (returnObj != null && returnObj.Success)
+            {
+                return new OkObjectResult(returnObj.Value);
+            }
+            else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new UnauthorizedResult();
+            }
+            else
+            {
+                return new BadRequestObjectResult(returnObj);
+            }
         }
-        else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            return new UnauthorizedResult();
-        }
-        else
-        {
-            return new BadRequestObjectResult(returnObj);
-        }
-    }
 
-    public static IResult ReturnResult<T>(this Result<T> returnObj)
-    {
-        if (returnObj != null && returnObj.Success)
+        public static IResult ReturnResult<T>(this Result<T> returnObj)
         {
-            return Results.Ok(returnObj.Value);
-        }
-        else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            return Results.Unauthorized();
-        }
-        else
-        {
-            return Results.BadRequest(returnObj);
+            if (returnObj != null && returnObj.Success)
+            {
+                return Results.Ok(returnObj.Value);
+            }
+            else if (returnObj != null && returnObj.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return Results.Unauthorized();
+            }
+            else
+            {
+                return Results.BadRequest(returnObj);
+            }
         }
     }
 }
