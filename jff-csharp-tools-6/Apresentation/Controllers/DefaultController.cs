@@ -9,6 +9,7 @@ using JffCsharpTools.Domain.Enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using JffCsharpTools6.Apresentation.Extensions;
 
 namespace JffCsharpTools6.Apresentation.Controllers
 {

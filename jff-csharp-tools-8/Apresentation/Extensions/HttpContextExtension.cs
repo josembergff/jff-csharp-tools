@@ -7,6 +7,8 @@ using JffCsharpTools.Domain.Enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
+namespace JffCsharpTools8.Apresentation.Extensions;
+
 public static class HttpContextExtensions
 {
     public static int CurrentUserId(this HttpContext context)

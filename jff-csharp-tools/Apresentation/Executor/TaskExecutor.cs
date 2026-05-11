@@ -4,8 +4,8 @@ using System.IO;
 using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
-using Jff.Csharp.Tools.Domain.Exceptions;
 using JffCsharpTools.Apresentation.Exceptions;
+using JffCsharpTools.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace JffCsharpTools.Apresentation.Executor

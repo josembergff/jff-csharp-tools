@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using JffCsharpTools.Application.Common;
 
-namespace Jff.Csharp.Tools.Domain.Exceptions
+namespace JffCsharpTools.Domain.Exceptions
 {
     public class DomainException : Exception
     {
