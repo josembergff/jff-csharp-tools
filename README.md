@@ -7,6 +7,8 @@ and Minimal API endpoints, global exception handling, JWT authentication helpers
 
 📖 **Documentation:** [`/docs`](./docs)
 
+🏛️ **Arquitetura (PT-BR):** [`/docs/architecture/README.md`](./docs/architecture/README.md)
+
 ## Install Package Manager
 
 ```bash
