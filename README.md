@@ -212,6 +212,5 @@ Full technical documentation is located in [`/docs`](./docs):
 | [`/docs/architecture/context.puml`](./docs/architecture/context.puml) | C4 Context diagram (PlantUML) |
 | [`/docs/architecture/containers.puml`](./docs/architecture/containers.puml) | C4 Containers diagram (PlantUML) |
 | [`/docs/architecture/components.puml`](./docs/architecture/components.puml) | C4 Components diagram (PlantUML) |
-| [`/docs/adr/ADR-001.md`](./docs/adr/ADR-001.md) | Architecture Decision Record — multi-target layered library |
 | [`/docs/database/schema.md`](./docs/database/schema.md) | Base entity schema and conventions |
 | [`/docs/flows/main-flows.md`](./docs/flows/main-flows.md) | Main runtime flows (auth, CRUD, pagination, exception handling) |

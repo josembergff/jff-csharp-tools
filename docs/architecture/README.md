@@ -26,8 +26,6 @@ O repositório publica múltiplos pacotes NuGet:
 
 Essa divisão permite que aplicações consumidoras escolham o pacote compatível com a versão do .NET usada no projeto.
 
-Documento relacionado: `docs/adr/ADR-001.md`.
-
 ---
 
 ## Stack (inferida do repositório)
@@ -164,7 +162,6 @@ Como visualizar:
 
 ## Documentos Relacionados
 
-- Decisão arquitetural: `docs/adr/ADR-001.md`
 - Fluxos principais (runtime): `docs/flows/main-flows.md`
 - Schema conceitual (entidades base): `docs/database/schema.md`
 
@@ -179,4 +176,3 @@ Antes de criar/modificar código:
 - O fluxo atual (controller/endpoints → service → repository → EF Core) foi preservado?
 - Foi evitada duplicação de lógica e a criação de novos paradigmas sem necessidade?
 - Dependências entre camadas permaneceram coerentes (Domain/Application não dependem de Infra/Apresentation)?
-
