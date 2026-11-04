@@ -9,8 +9,17 @@ jobs:
   publish:
     name: Build and Push to NuGet
     runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write # enable GitHub OIDC token issuance for this job
 
     steps:
+      # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: josembergff # Recommended: use a secret like ${{ secrets.NUGET_USER }} for your nuget.org username (profile name), NOT your email address
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -97,6 +106,6 @@ jobs:
         if: steps.check_main.outputs.on_main == 'true'
         run: |
           dotnet nuget push ./artifacts/*.nupkg \
-            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --api-key ${{steps.login.outputs.NUGET_API_KEY}} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
