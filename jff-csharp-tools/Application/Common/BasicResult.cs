@@ -70,6 +70,27 @@ namespace JffCsharpTools.Application.Common
         public static Result Ok() => new Result();
 
         /// <summary>
+        /// Factory method to create a successful result with a specified message.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static Result Ok(string message) => new Result() { Message = message };
+
+        /// <summary>
+        /// Factory method to create a successful result with a specified message and detailed message.
+        /// </summary>
+        /// <param name="messages"></param>
+        /// <returns></returns>
+        public static Result Ok(List<string> messages) => new Result() { Messages = messages };
+
+        /// <summary>
+        /// Factory method to create a successful result with a specified HTTP status code.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static Result Ok(HttpStatusCode code) => new Result() { StatusCode = code };
+
+        /// <summary>
         /// Factory method to create a failed result with a specified error message, optional detailed message, and HTTP status code (default: BadRequest).
         /// </summary>
         /// <param name="error">The main error message</param>
@@ -78,6 +99,20 @@ namespace JffCsharpTools.Application.Common
         /// <returns>A failed result with the specified error information</returns>
         public static Result Fail(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
             => new Result(error, message, statusCode);
+
+        /// <summary>
+        /// Factory method to create a failed result with a specified exception, optional detailed message,
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static Result Fail(DomainException ex) => new Result(ex);
+
+        /// <summary>
+        /// Factory method to create a failed result with a specified exception, optional detailed message,
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static Result Fail(Exception ex) => new Result(ex);
 
         public Result()
         {
@@ -100,23 +135,25 @@ namespace JffCsharpTools.Application.Common
         /// Initializes a new instance of the Result class based on a DomainException, extracting error details, base exception, and stack trace for comprehensive error reporting.
         /// </summary>
         /// <param name="ex">The DomainException instance</param>
-        public Result(DomainException ex)
+        public Result(DomainException ex, HttpStatusCode statusCode = HttpStatusCode.UnprocessableEntity)
         {
             Error = ex.Message;
             Errors = ex.Errors.ToList();
             BaseException = ex.InnerException?.Message;
             StackTrace = ex.StackTrace;
+            StatusCode = statusCode;
         }
 
         /// <summary>
         /// Initializes a new instance of the Result class based on a general Exception, extracting the main error message, base exception, and stack trace for comprehensive error reporting.
         /// </summary>
         /// <param name="ex">The Exception instance</param>
-        public Result(Exception ex)
+        public Result(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
             Error = ex.Message;
             BaseException = ex.InnerException?.Message;
             StackTrace = ex.StackTrace;
+            StatusCode = statusCode;
         }
     }
 }
