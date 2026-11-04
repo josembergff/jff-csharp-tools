@@ -81,7 +81,7 @@ namespace JffCsharpTools.Domain.Common
         /// <param name="error">Error code or identifier</param>
         /// <param name="errorMessage">Detailed error message</param>
         /// <param name="statusCode">HTTP status code associated with the error</param>
-        public PaginationResult(string error, string errorMessage, HttpStatusCode statusCode = HttpStatusCode.BadRequest) : base(error, errorMessage, statusCode)
+        public PaginationResult(string error, List<string> errors, HttpStatusCode statusCode = HttpStatusCode.BadRequest) : base(error, errors, statusCode)
         {
 
         }

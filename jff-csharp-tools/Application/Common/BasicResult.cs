@@ -97,8 +97,8 @@ namespace JffCsharpTools.Application.Common
         /// <param name="message">Optional detailed message</param>
         /// <param name="statusCode">HTTP status code (default: BadRequest)</param>
         /// <returns>A failed result with the specified error information</returns>
-        public static Result Fail(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
-            => new Result(error, message, statusCode);
+        public static Result Fail(string error, List<string> errors = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+            => new Result(error, errors, statusCode);
 
         /// <summary>
         /// Factory method to create a failed result with a specified exception, optional detailed message,
@@ -124,10 +124,10 @@ namespace JffCsharpTools.Application.Common
         /// <param name="error">The main error message</param>
         /// <param name="message">Optional detailed message</param>
         /// <param name="statusCode">HTTP status code (default: BadRequest)</param>
-        public Result(string error, string message = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        public Result(string error, List<string> errors = null, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
         {
             Error = error;
-            Message = message;
+            Errors = errors;
             StatusCode = statusCode;
         }
 
