@@ -34,6 +34,16 @@ namespace JffCsharpTools.Application.Interfaces
         Task<Result<IEnumerable<TEntity>>> Get<TEntity>(TEntity entityFilter = null, string[] includes = null) where TEntity : DefaultEntity, new();
 
         /// <summary>
+        /// Retrieves entities filtered any properties from entity
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="include"></param>
+        /// <param name="asNoTracking"></param>
+        /// <returns></returns>
+        Task<Result<IEnumerable<TEntity>>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity, new();
+
+        /// <summary>
         /// Retrieves entities filtered by user ID with optional additional filtering
         /// </summary>
         /// <typeparam name="TEntity">The entity type that inherits from DefaultEntity</typeparam>
@@ -114,6 +124,12 @@ namespace JffCsharpTools.Application.Interfaces
         /// <param name="key">The primary key value of the entity to delete</param>
         /// <returns>A response model containing a boolean indicating success or failure</returns>
         Task<Result<bool>> DeleteByKey<TEntity, TKey>(int IdUser, TKey key, bool filterCurrentUser = true) where TEntity : DefaultEntity, new();
+
+        /// <summary>
+        /// Saves changes to the database
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<bool>> SaveChanges();
     }
 
 }
