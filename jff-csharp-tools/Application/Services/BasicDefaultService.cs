@@ -191,5 +191,22 @@ namespace JffCsharpTools.Application.Services
             }
             return returnValue;
         }
+
+        public async Task<Result<bool>> SaveChanges()
+        {
+            await defaultRepository.SaveChangesAsync();
+            return Result<bool>.Ok(true);
+        }
+
+        public async Task<Result<IEnumerable<TEntity>>> Get<TEntity>(Expression<Func<TEntity, bool>> filter, string[] include = null, bool asNoTracking = false) where TEntity : DefaultEntity, new()
+        {
+            var returnValue = new Result<IEnumerable<TEntity>>();
+            var userFilterObjBase = await defaultRepository.Get(filter, include, asNoTracking);
+            if (userFilterObjBase != null)
+            {
+                returnValue.Value = userFilterObjBase;
+            }
+            return returnValue;
+        }
     }
 }
